@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Sklepix.Models.Product>
+
+@{
+    ViewData["Title"] = "Produkty";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">Dodaj produkt</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nazwa produktu
+            </th>
+            <th>
+                Cena produktu
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPrice)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Usuń</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
