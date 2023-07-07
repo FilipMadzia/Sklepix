@@ -9,10 +9,5 @@ namespace Sklepix.Models
         public string? Name { get; set; }
         [Required(ErrorMessage = "Cena jest wymagana")]
         public decimal Price { get; set; }
-
-        public ProductEntity()
-        {
-            
-        }
     }
 }

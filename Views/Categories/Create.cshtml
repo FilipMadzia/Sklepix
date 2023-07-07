@@ -1,7 +1,7 @@
-﻿@model Sklepix.Models.ProductEntity
+﻿@model Sklepix.Models.CategoryEntity
 
 @{
-    ViewData["Title"] = "Dodaj produkt";
+    ViewData["Title"] = "Dodaj kategorię";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,13 +14,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Nazwa</label>
-                <input asp-for="Name" class="form-control" autofocus />
+                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label">Cena</label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Dodaj" class="btn btn-primary" />
@@ -32,3 +27,7 @@
 <div>
     <a asp-action="Index">Wróć</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

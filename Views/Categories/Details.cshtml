@@ -1,7 +1,7 @@
-﻿@model Sklepix.Models.ProductEntity
+﻿@model Sklepix.Models.CategoryEntity
 
 @{
-    ViewData["Title"] = "Szczegóły";
+    ViewData["Title"] = "Szczegóły kategorii";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,17 +10,17 @@
 <div>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            Id
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
         <dt class = "col-sm-2">
             Nazwa
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            Cena
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
         </dd>
     </dl>
 </div>

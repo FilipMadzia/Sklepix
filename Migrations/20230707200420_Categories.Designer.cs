@@ -11,8 +11,8 @@ using Sklepix.Data;
 namespace Sklepix.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    [Migration("20230707062636_Product prop naming3")]
-    partial class Productpropnaming3
+    [Migration("20230707200420_Categories")]
+    partial class Categories
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,24 @@ namespace Sklepix.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Sklepix.Models.Product", b =>
+            modelBuilder.Entity("Sklepix.Models.CategoryEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryEntity");
+                });
+
+            modelBuilder.Entity("Sklepix.Models.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

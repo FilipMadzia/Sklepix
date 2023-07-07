@@ -1,23 +1,20 @@
-﻿@model IEnumerable<Sklepix.Models.ProductEntity>
+﻿@model IEnumerable<Sklepix.Models.CategoryEntity>
 
 @{
-    ViewData["Title"] = "Produkty";
+    ViewData["Title"] = "Kategorie produktów";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Dodaj produkt</a>
+    <a asp-action="Create">Dodaj kategorię</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
                 Nazwa
-            </th>
-            <th>
-                Cena
             </th>
             <th></th>
         </tr>
@@ -29,14 +26,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
                 <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
