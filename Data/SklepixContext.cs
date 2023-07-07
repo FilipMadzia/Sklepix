@@ -14,6 +14,6 @@ namespace Sklepix.Data
         {
         }
 
-        public DbSet<Sklepix.Models.Product> Product { get; set; } = default!;
+        public DbSet<Sklepix.Models.ProductEntity> Product { get; set; } = default!;
     }
 }
