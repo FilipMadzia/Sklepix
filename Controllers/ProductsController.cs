@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,20 +23,20 @@ namespace Sklepix.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
+              return _context.ProductEntity != null ? 
+                          View(await _context.ProductEntity.ToListAsync()) :
                           Problem("Entity set 'SklepixContext.Product'  is null.");
         }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var product = await _context.ProductEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -48,7 +49,10 @@ namespace Sklepix.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            return View();
+            ProductViewModel model = new ProductViewModel();
+            model.Categories = _context.CategoryEntity != null ? _context.CategoryEntity.ToList() : new List<CategoryEntity>();
+            
+            return View(model);
         }
 
         // POST: Products/Create
@@ -56,26 +60,40 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price")] ProductEntity product)
+        public async Task<IActionResult> Create(ProductViewModel productVm)
         {
-            if (ModelState.IsValid)
+            List<CategoryEntity>? categories = JsonSerializer.Deserialize<List<CategoryEntity>>(Request.Form["Categories"]);
+            ProductEntity product = new ProductEntity()
+            {
+                Name = productVm.Name,
+                Price = productVm.Price,
+                Category = categories.Find(x => x.Id == productVm.CategoryId)
+            };
+
+            if(product.Category == null)
+            {
+                throw new Exception();
+            }
+
+            if(ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+
+            return View(productVm);
         }
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.ProductEntity.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -121,12 +139,12 @@ namespace Sklepix.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var product = await _context.ProductEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -141,14 +159,14 @@ namespace Sklepix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Product == null)
+            if (_context.ProductEntity == null)
             {
                 return Problem("Entity set 'SklepixContext.Product'  is null.");
             }
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.ProductEntity.FindAsync(id);
             if (product != null)
             {
-                _context.Product.Remove(product);
+                _context.ProductEntity.Remove(product);
             }
             
             await _context.SaveChangesAsync();
@@ -157,7 +175,7 @@ namespace Sklepix.Controllers
 
         private bool ProductExists(int id)
         {
-            return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ProductEntity?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
