@@ -37,6 +37,7 @@ namespace Sklepix.Controllers
             }
 
             var product = await _context.ProductEntity
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -62,7 +63,7 @@ namespace Sklepix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel productVm)
         {
-            List<CategoryEntity>? categories = JsonSerializer.Deserialize<List<CategoryEntity>>(Request.Form["Categories"]);
+            List<CategoryEntity>? categories = _context.CategoryEntity.ToList();
             ProductEntity product = new ProductEntity()
             {
                 Name = productVm.Name,

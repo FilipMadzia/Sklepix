@@ -1,5 +1,4 @@
-﻿@using System.Text.Json;
-@model Sklepix.Models.ProductViewModel
+﻿@model Sklepix.Models.ProductViewModel
 
 @{
     ViewData["Title"] = "Dodaj produkt";
@@ -33,7 +32,6 @@
                     }
                 </select>
             </div>
-            <input type="hidden" name="Categories" value="@JsonSerializer.Serialize(Model.Categories)" />
             <div class="form-group">
                 <input type="submit" value="Dodaj" class="btn btn-primary" />
             </div>
