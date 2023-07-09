@@ -8,16 +8,16 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Dodaj produkt</a>
+    <a class="btn btn-primary" asp-action="Create">Dodaj produkt</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Nazwa
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                Cena
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
