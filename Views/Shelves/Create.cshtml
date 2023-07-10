@@ -1,0 +1,44 @@
+﻿@model Sklepix.Models.ShelfViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<AisleEntity> aisles = Model.Aisles!= null ? Model.Aisles : new List<AisleEntity>();
+}
+
+<h1>Create</h1>
+
+<h4>ShelfEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AisleId" class="control-label">Alejka</label>
+                <select asp-for="AisleId" class="form-control">
+                    @foreach (AisleEntity aisle in aisles)
+                    {
+                        <option value="@aisle.Id">@aisle.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

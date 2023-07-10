@@ -22,6 +22,22 @@ namespace Sklepix.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Sklepix.Models.AisleEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AisleEntity");
+                });
+
             modelBuilder.Entity("Sklepix.Models.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -62,6 +78,27 @@ namespace Sklepix.Migrations
                     b.ToTable("ProductEntity");
                 });
 
+            modelBuilder.Entity("Sklepix.Models.ShelfEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AisleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AisleId");
+
+                    b.ToTable("ShelfEntity");
+                });
+
             modelBuilder.Entity("Sklepix.Models.ProductEntity", b =>
                 {
                     b.HasOne("Sklepix.Models.CategoryEntity", "Category")
@@ -69,6 +106,15 @@ namespace Sklepix.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Sklepix.Models.ShelfEntity", b =>
+                {
+                    b.HasOne("Sklepix.Models.AisleEntity", "Aisle")
+                        .WithMany()
+                        .HasForeignKey("AisleId");
+
+                    b.Navigation("Aisle");
                 });
 #pragma warning restore 612, 618
         }

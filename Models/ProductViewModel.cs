@@ -8,7 +8,8 @@ namespace Sklepix.Models
         public string? Name { get; set; }
         public decimal Price { get; set; }
         public List<CategoryEntity>? Categories { get; set; }
-        [Required]
         public int CategoryId { get; set; }
+        public List<ShelfEntity>? Shelves { get; set; }
+        public int ShelfId { get; set; }
     }
 }

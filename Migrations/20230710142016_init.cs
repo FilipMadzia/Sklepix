@@ -9,6 +9,19 @@ namespace Sklepix.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AisleEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AisleEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CategoryEntity",
                 columns: table => new
                 {
@@ -19,6 +32,25 @@ namespace Sklepix.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CategoryEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShelfEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    AisleId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShelfEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShelfEntity_AisleEntity_AisleId",
+                        column: x => x.AisleId,
+                        principalTable: "AisleEntity",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -45,6 +77,11 @@ namespace Sklepix.Migrations
                 name: "IX_ProductEntity_CategoryId",
                 table: "ProductEntity",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShelfEntity_AisleId",
+                table: "ShelfEntity",
+                column: "AisleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -53,7 +90,13 @@ namespace Sklepix.Migrations
                 name: "ProductEntity");
 
             migrationBuilder.DropTable(
+                name: "ShelfEntity");
+
+            migrationBuilder.DropTable(
                 name: "CategoryEntity");
+
+            migrationBuilder.DropTable(
+                name: "AisleEntity");
         }
     }
 }

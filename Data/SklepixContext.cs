@@ -17,5 +17,9 @@ namespace Sklepix.Data
         public DbSet<Sklepix.Models.ProductEntity> ProductEntity { get; set; } = default!;
 
         public DbSet<Sklepix.Models.CategoryEntity>? CategoryEntity { get; set; }
+
+        public DbSet<Sklepix.Models.AisleEntity>? AisleEntity { get; set; }
+
+        public DbSet<Sklepix.Models.ShelfEntity>? ShelfEntity { get; set; }
     }
 }
