@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dodaj produkt";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<CategoryEntity> categories = Model.Categories != null ? Model.Categories : new List<CategoryEntity>();
+    List<ShelfEntity> shelves = Model.Shelves != null ? Model.Shelves : new List<ShelfEntity>();
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -29,6 +30,15 @@
                     @foreach(CategoryEntity category in categories)
                     {
                         <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShelfId" class="control-label">Półka w alejce</label>
+                <select asp-for="ShelfId" class="form-control">
+                    @foreach (ShelfEntity shelf in shelves)
+                    {
+                        <option value="@shelf.Id">@shelf.Number, @shelf.Aisle.Name</option>
                     }
                 </select>
             </div>

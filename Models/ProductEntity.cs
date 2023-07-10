@@ -12,5 +12,6 @@ namespace Sklepix.Models
         public decimal Price { get; set; }
         [DisplayName("Kategoria")]
         public CategoryEntity? Category { get; set; }
+        public ShelfEntity? Shelf { get; set; }
     }
 }

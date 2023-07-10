@@ -61,7 +61,8 @@ namespace Sklepix.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    ShelfId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,12 +72,22 @@ namespace Sklepix.Migrations
                         column: x => x.CategoryId,
                         principalTable: "CategoryEntity",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductEntity_ShelfEntity_ShelfId",
+                        column: x => x.ShelfId,
+                        principalTable: "ShelfEntity",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductEntity_CategoryId",
                 table: "ProductEntity",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductEntity_ShelfId",
+                table: "ProductEntity",
+                column: "ShelfId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShelfEntity_AisleId",
@@ -90,10 +101,10 @@ namespace Sklepix.Migrations
                 name: "ProductEntity");
 
             migrationBuilder.DropTable(
-                name: "ShelfEntity");
+                name: "CategoryEntity");
 
             migrationBuilder.DropTable(
-                name: "CategoryEntity");
+                name: "ShelfEntity");
 
             migrationBuilder.DropTable(
                 name: "AisleEntity");

@@ -12,7 +12,7 @@ using Sklepix.Data;
 namespace Sklepix.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    [Migration("20230710142016_init")]
+    [Migration("20230710151710_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,9 +73,14 @@ namespace Sklepix.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ShelfId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ShelfId");
 
                     b.ToTable("ProductEntity");
                 });
@@ -107,7 +112,13 @@ namespace Sklepix.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
+                    b.HasOne("Sklepix.Models.ShelfEntity", "Shelf")
+                        .WithMany()
+                        .HasForeignKey("ShelfId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("Shelf");
                 });
 
             modelBuilder.Entity("Sklepix.Models.ShelfEntity", b =>

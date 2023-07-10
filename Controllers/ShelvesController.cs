@@ -25,7 +25,7 @@ namespace Sklepix.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ShelfEntity != null ? 
-                          View(await _context.ShelfEntity.ToListAsync()) :
+                          View(await _context.ShelfEntity.OrderByDescending(s => s.Aisle.Name).ToListAsync()) :
                           Problem("Entity set 'SklepixContext.ShelfEntity'  is null.");
         }
 

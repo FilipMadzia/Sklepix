@@ -15,11 +15,15 @@ namespace Sklepix.Controllers
     {
         private readonly SklepixContext _context;
         private readonly List<CategoryEntity> categories;
+        private readonly List<ShelfEntity> shelves;
+        private readonly List<AisleEntity> aisles;
 
         public ProductsController(SklepixContext context)
         {
             _context = context;
             categories = _context.CategoryEntity != null ? _context.CategoryEntity.ToList() : new List<CategoryEntity>();
+            shelves = _context.ShelfEntity!= null ? _context.ShelfEntity.OrderByDescending(s => s.Aisle.Name).ToList() : new List<ShelfEntity>();
+            aisles = _context.AisleEntity!= null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
         }
 
         // GET: Products
@@ -53,7 +57,9 @@ namespace Sklepix.Controllers
         public IActionResult Create()
         {
             ProductViewModel model = new ProductViewModel();
-            model.Categories = _context.CategoryEntity != null ? _context.CategoryEntity.ToList() : new List<CategoryEntity>();
+            model.Categories = categories;
+            model.Shelves = shelves;
+            model.Aisles = aisles;
             
             return View(model);
         }
@@ -69,7 +75,8 @@ namespace Sklepix.Controllers
             {
                 Name = productVm.Name,
                 Price = productVm.Price,
-                Category = categories.Find(x => x.Id == productVm.CategoryId)
+                Category = categories.Find(x => x.Id == productVm.CategoryId),
+                Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
             };
 
             if(product.Category == null)

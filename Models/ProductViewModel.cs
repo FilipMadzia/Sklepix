@@ -11,5 +11,6 @@ namespace Sklepix.Models
         public int CategoryId { get; set; }
         public List<ShelfEntity>? Shelves { get; set; }
         public int ShelfId { get; set; }
+        public List<AisleEntity>? Aisles { get; set; }
     }
 }
