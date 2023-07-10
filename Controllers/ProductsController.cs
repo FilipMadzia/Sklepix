@@ -14,10 +14,12 @@ namespace Sklepix.Controllers
     public class ProductsController : Controller
     {
         private readonly SklepixContext _context;
+        private readonly List<CategoryEntity> categories;
 
         public ProductsController(SklepixContext context)
         {
             _context = context;
+            categories = _context.CategoryEntity != null ? _context.CategoryEntity.ToList() : new List<CategoryEntity>();
         }
 
         // GET: Products
@@ -63,7 +65,6 @@ namespace Sklepix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel productVm)
         {
-            List<CategoryEntity>? categories = _context.CategoryEntity.ToList();
             ProductEntity product = new ProductEntity()
             {
                 Name = productVm.Name,
@@ -104,8 +105,8 @@ namespace Sklepix.Controllers
                 Id = product.Id,
                 Name = product.Name,
                 Price = product.Price,
-                Categories = _context.CategoryEntity.ToList(),
-                CategoryId = product.Category.Id
+                Categories = categories,
+                CategoryId = product.Category != null ? product.Category.Id : throw new Exception()
             };
             return View(productVm);
         }
@@ -117,7 +118,6 @@ namespace Sklepix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductViewModel productVm)
         {
-            List<CategoryEntity>? categories = _context.CategoryEntity.ToList();
             ProductEntity product = new ProductEntity()
             {
                 Name = productVm.Name,
