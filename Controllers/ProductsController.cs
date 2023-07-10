@@ -99,7 +99,15 @@ namespace Sklepix.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            ProductViewModel productVm = new ProductViewModel()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Categories = _context.CategoryEntity.ToList(),
+                CategoryId = product.Category.Id
+            };
+            return View(productVm);
         }
 
         // POST: Products/Edit/5
@@ -107,8 +115,20 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] ProductEntity product)
+        public async Task<IActionResult> Edit(int id, ProductViewModel productVm)
         {
+            List<CategoryEntity>? categories = _context.CategoryEntity.ToList();
+            ProductEntity product = new ProductEntity()
+            {
+                Name = productVm.Name,
+                Price = productVm.Price,
+                Category = categories.Find(x => x.Id == productVm.CategoryId)
+            };
+
+            if(product.Category == null)
+            {
+                throw new Exception();
+            }
             if (id != product.Id)
             {
                 return NotFound();
