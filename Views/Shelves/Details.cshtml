@@ -1,12 +1,12 @@
 ﻿@model Sklepix.Models.ShelfEntity
 
 @{
-    ViewData["Title"] = "Szczegóły";
+    ViewData["Title"] = "Szczegóły półki";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string? aisleName = Model.Aisle != null ? Model.Aisle.Name : String.Empty;
 }
 
-<h1>@ViewData["Title"] półki</h1>
+<h1>@ViewData["Title"]</h1>
 
 <div>
     <hr />
@@ -32,6 +32,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edytuj</a> |
+    <a asp-action="Index">Wróć</a>
 </div>

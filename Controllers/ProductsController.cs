@@ -29,9 +29,9 @@ namespace Sklepix.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.ProductEntity != null ? 
-                          View(await _context.ProductEntity.ToListAsync()) :
-                          Problem("Entity set 'SklepixContext.Product'  is null.");
+            return _context.ProductEntity != null ? 
+                View(await _context.ProductEntity.OrderByDescending(s => s.Category.Name).ToListAsync()) :
+                Problem("Entity set 'SklepixContext.Product'  is null.");
         }
 
         // GET: Products/Details/5
@@ -113,7 +113,10 @@ namespace Sklepix.Controllers
                 Name = product.Name,
                 Price = product.Price,
                 Categories = categories,
-                CategoryId = product.Category != null ? product.Category.Id : throw new Exception()
+                CategoryId = product.Category != null ? product.Category.Id : throw new Exception(),
+                Shelves = shelves,
+                ShelfId = product.Shelf != null ? product.Shelf.Id : throw new Exception(),
+                Aisles = aisles
             };
             return View(productVm);
         }
@@ -127,9 +130,11 @@ namespace Sklepix.Controllers
         {
             ProductEntity product = new ProductEntity()
             {
+                Id = productVm.Id,
                 Name = productVm.Name,
                 Price = productVm.Price,
-                Category = categories.Find(x => x.Id == productVm.CategoryId)
+                Category = categories.Find(x => x.Id == productVm.CategoryId),
+                Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
             };
 
             if(product.Category == null)

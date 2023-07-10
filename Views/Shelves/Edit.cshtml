@@ -1,13 +1,13 @@
-﻿@model Sklepix.Models.ShelfEntity
+﻿@model Sklepix.Models.ShelfViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edytuj półkę";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<AisleEntity> aisles = Model.Aisles != null ? Model.Aisles : new List<AisleEntity>();
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>ShelfEntity</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,18 +16,27 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
+                <input asp-for="Number" class="form-control" autofocus />
                 <span asp-validation-for="Number" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="AisleId" class="control-label">Alejka</label>
+                <select asp-for="AisleId" class="form-control">
+                    @foreach (AisleEntity aisle in aisles)
+                    {
+                        <option value="@aisle.Id">@aisle.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Wróć</a>
 </div>
 
 @section Scripts {

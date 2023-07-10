@@ -38,7 +38,7 @@
                 <select asp-for="ShelfId" class="form-control">
                     @foreach (ShelfEntity shelf in shelves)
                     {
-                        <option value="@shelf.Id">@shelf.Number, @shelf.Aisle.Name</option>
+                        <option value="@shelf.Id">@shelf.Number | @shelf.Aisle.Name</option>
                     }
                 </select>
             </div>

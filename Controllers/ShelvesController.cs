@@ -92,7 +92,16 @@ namespace Sklepix.Controllers
             {
                 return NotFound();
             }
-            return View(shelfEntity);
+
+            ShelfViewModel shelfViewModel = new ShelfViewModel()
+            {
+                Id = shelfEntity.Id,
+                Number = shelfEntity.Number,
+                Aisles = aisles,
+                AisleId = shelfEntity.Aisle.Id
+            };
+
+            return View(shelfViewModel);
         }
 
         // POST: ShelfEntities/Edit/5
@@ -100,8 +109,15 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Number")] ShelfEntity shelfEntity)
+        public async Task<IActionResult> Edit(int id, ShelfViewModel shelfVm)
         {
+            ShelfEntity shelfEntity = new ShelfEntity()
+            {
+                Id = shelfVm.Id,
+                Number = shelfVm.Number,
+                Aisle = aisles.Find(x => x.Id == shelfVm.AisleId)
+            };
+
             if (id != shelfEntity.Id)
             {
                 return NotFound();
