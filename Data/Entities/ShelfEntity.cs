@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Sklepix.Models
+namespace Sklepix.Data.Entities
 {
     public class ShelfEntity
     {

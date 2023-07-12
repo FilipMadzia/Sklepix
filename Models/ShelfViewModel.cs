@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Sklepix.Data.Entities;
 
 namespace Sklepix.Models
 {

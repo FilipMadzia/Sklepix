@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Sklepix.Models;
+using Sklepix.Data.Entities;
 
 namespace Sklepix.Data
 {
@@ -14,12 +14,12 @@ namespace Sklepix.Data
         {
         }
 
-        public DbSet<Sklepix.Models.ProductEntity> ProductEntity { get; set; } = default!;
+        public DbSet<ProductEntity> ProductEntity { get; set; } = default!;
 
-        public DbSet<Sklepix.Models.CategoryEntity>? CategoryEntity { get; set; }
+        public DbSet<CategoryEntity>? CategoryEntity { get; set; }
 
-        public DbSet<Sklepix.Models.AisleEntity>? AisleEntity { get; set; }
+        public DbSet<AisleEntity>? AisleEntity { get; set; }
 
-        public DbSet<Sklepix.Models.ShelfEntity>? ShelfEntity { get; set; }
+        public DbSet<ShelfEntity>? ShelfEntity { get; set; }
     }
 }

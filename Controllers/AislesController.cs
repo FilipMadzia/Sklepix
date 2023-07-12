@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
-using Sklepix.Models;
+using Sklepix.Data.Entities;
 
 namespace Sklepix.Controllers
 {

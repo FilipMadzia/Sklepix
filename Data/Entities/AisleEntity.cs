@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
-namespace Sklepix.Models
+namespace Sklepix.Data.Entities
 {
-    public class CategoryEntity
+    public class AisleEntity
     {
         public int Id { get; set; }
         [DisplayName("Nazwa")]
