@@ -36,6 +36,23 @@ namespace Sklepix.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AisleEntity");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Warzywa i owoce"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Napoje"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Pieczywo"
+                        });
                 });
 
             modelBuilder.Entity("Sklepix.Data.Entities.CategoryEntity", b =>
@@ -52,6 +69,28 @@ namespace Sklepix.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CategoryEntity");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Warzywa"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Owoce"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Napoje"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Pieczywo"
+                        });
                 });
 
             modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>

@@ -79,6 +79,27 @@ namespace Sklepix.Data.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.InsertData(
+                table: "AisleEntity",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Warzywa i owoce" },
+                    { 2, "Napoje" },
+                    { 3, "Pieczywo" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CategoryEntity",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Warzywa" },
+                    { 2, "Owoce" },
+                    { 3, "Napoje" },
+                    { 4, "Pieczywo" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ProductEntity_CategoryId",
                 table: "ProductEntity",
