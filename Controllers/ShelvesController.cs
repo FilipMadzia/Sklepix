@@ -52,7 +52,7 @@ namespace Sklepix.Controllers
         // GET: ShelfEntities/Create
         public IActionResult Create()
         {
-            ShelfViewModel model = new ShelfViewModel();
+            ShelfCreateViewModel model = new ShelfCreateViewModel();
             model.Aisles = _context.AisleEntity != null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
             
             return View(model);
@@ -63,7 +63,7 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ShelfViewModel shelfVm)
+        public async Task<IActionResult> Create(ShelfCreateViewModel shelfVm)
         {
             ShelfEntity shelf = new ShelfEntity()
             {
@@ -94,7 +94,7 @@ namespace Sklepix.Controllers
                 return NotFound();
             }
 
-            ShelfViewModel shelfViewModel = new ShelfViewModel()
+            ShelfCreateViewModel shelfViewModel = new ShelfCreateViewModel()
             {
                 Id = shelfEntity.Id,
                 Number = shelfEntity.Number,
@@ -110,7 +110,7 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ShelfViewModel shelfVm)
+        public async Task<IActionResult> Edit(int id, ShelfCreateViewModel shelfVm)
         {
             ShelfEntity shelfEntity = new ShelfEntity()
             {

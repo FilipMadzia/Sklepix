@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Sklepix.Migrations
+namespace Sklepix.Data.Migrations
 {
     public partial class init : Migration
     {

@@ -3,7 +3,7 @@ using Sklepix.Data.Entities;
 
 namespace Sklepix.Models
 {
-    public class ShelfViewModel
+    public class ShelfCreateViewModel
     {
         public int Id { get; set; }
         [DisplayName("Numer")]

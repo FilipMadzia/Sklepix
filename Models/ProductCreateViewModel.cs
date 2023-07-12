@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Sklepix.Data.Entities;
+﻿using Sklepix.Data.Entities;
+using System.ComponentModel;
 
 namespace Sklepix.Models
 {
-    public class ProductViewModel
+    public class ProductCreateViewModel
     {
         public int Id { get; set; }
+        [DisplayName("Nazwa")]
         public string? Name { get; set; }
+        [DisplayName("Cena")]
         public decimal Price { get; set; }
         public List<CategoryEntity>? Categories { get; set; }
         public int CategoryId { get; set; }

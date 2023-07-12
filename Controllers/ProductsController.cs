@@ -57,7 +57,7 @@ namespace Sklepix.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ProductViewModel model = new ProductViewModel();
+            ProductCreateViewModel model = new ProductCreateViewModel();
             model.Categories = categories;
             model.Shelves = shelves;
             model.Aisles = aisles;
@@ -70,7 +70,7 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductViewModel productVm)
+        public async Task<IActionResult> Create(ProductCreateViewModel productVm)
         {
             ProductEntity product = new ProductEntity()
             {
@@ -108,7 +108,7 @@ namespace Sklepix.Controllers
             {
                 return NotFound();
             }
-            ProductViewModel productVm = new ProductViewModel()
+            ProductCreateViewModel productVm = new ProductCreateViewModel()
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -127,7 +127,7 @@ namespace Sklepix.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductViewModel productVm)
+        public async Task<IActionResult> Edit(int id, ProductCreateViewModel productVm)
         {
             ProductEntity product = new ProductEntity()
             {

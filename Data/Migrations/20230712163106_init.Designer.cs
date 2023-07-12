@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sklepix.Data;
 
 #nullable disable
 
-namespace Sklepix.Migrations
+namespace Sklepix.Data.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    partial class SklepixContextModelSnapshot : ModelSnapshot
+    [Migration("20230712163106_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace Sklepix.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Sklepix.Models.AisleEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.AisleEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +40,7 @@ namespace Sklepix.Migrations
                     b.ToTable("AisleEntity");
                 });
 
-            modelBuilder.Entity("Sklepix.Models.CategoryEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +56,7 @@ namespace Sklepix.Migrations
                     b.ToTable("CategoryEntity");
                 });
 
-            modelBuilder.Entity("Sklepix.Models.ProductEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +85,7 @@ namespace Sklepix.Migrations
                     b.ToTable("ProductEntity");
                 });
 
-            modelBuilder.Entity("Sklepix.Models.ShelfEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.ShelfEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,13 +106,13 @@ namespace Sklepix.Migrations
                     b.ToTable("ShelfEntity");
                 });
 
-            modelBuilder.Entity("Sklepix.Models.ProductEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>
                 {
-                    b.HasOne("Sklepix.Models.CategoryEntity", "Category")
+                    b.HasOne("Sklepix.Data.Entities.CategoryEntity", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("Sklepix.Models.ShelfEntity", "Shelf")
+                    b.HasOne("Sklepix.Data.Entities.ShelfEntity", "Shelf")
                         .WithMany()
                         .HasForeignKey("ShelfId");
 
@@ -119,9 +121,9 @@ namespace Sklepix.Migrations
                     b.Navigation("Shelf");
                 });
 
-            modelBuilder.Entity("Sklepix.Models.ShelfEntity", b =>
+            modelBuilder.Entity("Sklepix.Data.Entities.ShelfEntity", b =>
                 {
-                    b.HasOne("Sklepix.Models.AisleEntity", "Aisle")
+                    b.HasOne("Sklepix.Data.Entities.AisleEntity", "Aisle")
                         .WithMany()
                         .HasForeignKey("AisleId");
 
