@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
+using Sklepix.Models;
 
 namespace Sklepix.Controllers
 {
@@ -19,83 +15,105 @@ namespace Sklepix.Controllers
             _context = context;
         }
 
-        // GET: CategoryEntities
         public async Task<IActionResult> Index()
         {
-              return _context.CategoryEntity != null ? 
-                          View(await _context.CategoryEntity.ToListAsync()) :
-                          Problem("Entity set 'SklepixContext.CategoryEntity'  is null.");
+            List<CategoryDetailsViewModel> categoryVms = await _context.CategoryEntity
+                .Select(i => new CategoryDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Name = i.Name
+                })
+                .ToListAsync();
+
+            return View(categoryVms);
         }
 
-        // GET: CategoryEntities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.CategoryEntity == null)
+            if(id == null || _context.CategoryEntity == null)
             {
                 return NotFound();
             }
 
             var categoryEntity = await _context.CategoryEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (categoryEntity == null)
+            if(categoryEntity == null)
             {
                 return NotFound();
             }
 
-            return View(categoryEntity);
+            CategoryDetailsViewModel categoryVm = new CategoryDetailsViewModel()
+            {
+                Id = categoryEntity.Id,
+                Name = categoryEntity.Name
+            };
+
+            return View(categoryVm);
         }
 
-        // GET: CategoryEntities/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new CategoryCreateViewModel());
         }
 
-        // POST: CategoryEntities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] CategoryEntity categoryEntity)
+        public async Task<IActionResult> Create(CategoryCreateViewModel categoryVm)
         {
-            if (ModelState.IsValid)
+            CategoryEntity categoryEntity = new CategoryEntity()
+            {
+                Id = categoryVm.Id,
+                Name = categoryVm.Name
+            };
+
+            if(ModelState.IsValid)
             {
                 _context.Add(categoryEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(categoryEntity);
+
+            return View(categoryVm);
         }
 
-        // GET: CategoryEntities/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.CategoryEntity == null)
+            if(id == null || _context.CategoryEntity == null)
             {
                 return NotFound();
             }
 
             var categoryEntity = await _context.CategoryEntity.FindAsync(id);
-            if (categoryEntity == null)
+            if(categoryEntity == null)
             {
                 return NotFound();
             }
-            return View(categoryEntity);
+
+            CategoryCreateViewModel categoryVm = new CategoryCreateViewModel()
+            {
+                Id = categoryEntity.Id,
+                Name = categoryEntity.Name
+            };
+
+            return View(categoryVm);
         }
 
-        // POST: CategoryEntities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] CategoryEntity categoryEntity)
+        public async Task<IActionResult> Edit(int id, CategoryCreateViewModel categoryVm)
         {
-            if (id != categoryEntity.Id)
+            CategoryEntity categoryEntity = new CategoryEntity()
+            {
+                Id = categoryVm.Id,
+                Name = categoryVm.Name
+            };
+
+            if(id != categoryEntity.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 try
                 {
@@ -115,10 +133,10 @@ namespace Sklepix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(categoryEntity);
+
+            return View(categoryVm);
         }
 
-        // GET: CategoryEntities/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.CategoryEntity == null)
@@ -133,20 +151,25 @@ namespace Sklepix.Controllers
                 return NotFound();
             }
 
-            return View(categoryEntity);
+            CategoryDetailsViewModel categoryVm = new CategoryDetailsViewModel()
+            {
+                Id = categoryEntity.Id,
+                Name = categoryEntity.Name,
+            };
+
+            return View(categoryVm);
         }
 
-        // POST: CategoryEntities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.CategoryEntity == null)
+            if(_context.CategoryEntity == null)
             {
                 return Problem("Entity set 'SklepixContext.CategoryEntity'  is null.");
             }
             var categoryEntity = await _context.CategoryEntity.FindAsync(id);
-            if (categoryEntity != null)
+            if(categoryEntity != null)
             {
                 _context.CategoryEntity.Remove(categoryEntity);
             }

@@ -1,5 +1,4 @@
-﻿@using Sklepix.Data.Entities
-@model IEnumerable<ShelfEntity>
+﻿@model IEnumerable<ShelfDetailsViewModel>
 
 @{
     ViewData["Title"] = "Półki";
@@ -18,7 +17,7 @@
                 @Html.DisplayNameFor(model => model.Number)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Aisle.Name) alejki
+                @Html.DisplayNameFor(model => model.Aisle)
             </th>
             <th></th>
         </tr>
@@ -30,7 +29,7 @@
                 @Html.DisplayFor(modelItem => item.Number)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Aisle.Name)
+                @Html.DisplayFor(modelItem => item.Aisle)
             </td>
             <td class="text-right">
                 <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
+using Sklepix.Models;
 
 namespace Sklepix.Controllers
 {
@@ -19,77 +15,98 @@ namespace Sklepix.Controllers
             _context = context;
         }
 
-        // GET: AisleEntities
         public async Task<IActionResult> Index()
         {
-              return _context.AisleEntity != null ? 
-                          View(await _context.AisleEntity.ToListAsync()) :
-                          Problem("Entity set 'SklepixContext.AisleEntity'  is null.");
+            List<AisleDetailsViewModel> aisleVms = await _context.AisleEntity
+                .Select(i => new AisleDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Name = i.Name
+                })
+                .ToListAsync();
+
+            return View(aisleVms);
         }
 
-        // GET: AisleEntities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.AisleEntity == null)
+            if(id == null || _context.AisleEntity == null)
             {
                 return NotFound();
             }
 
             var aisleEntity = await _context.AisleEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (aisleEntity == null)
+            if(aisleEntity == null)
             {
                 return NotFound();
             }
 
-            return View(aisleEntity);
+            AisleDetailsViewModel aisleVm = new AisleDetailsViewModel()
+            {
+                Id = aisleEntity.Id,
+                Name = aisleEntity.Name
+            };
+
+            return View(aisleVm);
         }
 
-        // GET: AisleEntities/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new AisleCreateViewModel());
         }
 
-        // POST: AisleEntities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] AisleEntity aisleEntity)
+        public async Task<IActionResult> Create(AisleCreateViewModel aisleVm)
         {
+            AisleEntity aisleEntity = new AisleEntity()
+            {
+                Id = aisleVm.Id,
+                Name = aisleVm.Name
+            };
+
             if (ModelState.IsValid)
             {
                 _context.Add(aisleEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(aisleEntity);
+            return View(aisleVm);
         }
 
-        // GET: AisleEntities/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.AisleEntity == null)
+            if(id == null || _context.AisleEntity == null)
             {
                 return NotFound();
             }
 
             var aisleEntity = await _context.AisleEntity.FindAsync(id);
-            if (aisleEntity == null)
+            if(aisleEntity == null)
             {
                 return NotFound();
             }
-            return View(aisleEntity);
+
+            AisleCreateViewModel aisleVm = new AisleCreateViewModel()
+            {
+                Id = aisleEntity.Id,
+                Name = aisleEntity.Name
+            };
+
+            return View(aisleVm);
         }
 
-        // POST: AisleEntities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] AisleEntity aisleEntity)
+        public async Task<IActionResult> Edit(int id, AisleCreateViewModel aisleVm)
         {
+            AisleEntity aisleEntity = new AisleEntity()
+            {
+                Id = aisleVm.Id,
+                Name = aisleVm.Name
+            };
+
             if (id != aisleEntity.Id)
             {
                 return NotFound();
@@ -115,38 +132,42 @@ namespace Sklepix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(aisleEntity);
+            return View(aisleVm);
         }
 
-        // GET: AisleEntities/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.AisleEntity == null)
+            if(id == null || _context.AisleEntity == null)
             {
                 return NotFound();
             }
 
             var aisleEntity = await _context.AisleEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (aisleEntity == null)
+            if(aisleEntity == null)
             {
                 return NotFound();
             }
 
-            return View(aisleEntity);
+            AisleDetailsViewModel aisleVm = new AisleDetailsViewModel()
+            {
+                Id = aisleEntity.Id,
+                Name = aisleEntity.Name
+            };
+
+            return View(aisleVm);
         }
 
-        // POST: AisleEntities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.AisleEntity == null)
+            if(_context.AisleEntity == null)
             {
                 return Problem("Entity set 'SklepixContext.AisleEntity'  is null.");
             }
             var aisleEntity = await _context.AisleEntity.FindAsync(id);
-            if (aisleEntity != null)
+            if(aisleEntity != null)
             {
                 _context.AisleEntity.Remove(aisleEntity);
             }

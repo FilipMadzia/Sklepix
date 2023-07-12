@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
@@ -27,52 +21,67 @@ namespace Sklepix.Controllers
             aisles = _context.AisleEntity!= null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
         }
 
-        // GET: Products
         public async Task<IActionResult> Index()
         {
-            return _context.ProductEntity != null ? 
-                View(await _context.ProductEntity.OrderByDescending(s => s.Category.Name).ToListAsync()) :
-                Problem("Entity set 'SklepixContext.Product'  is null.");
+            List<ProductDetailsViewModel> productVms = await _context.ProductEntity
+                .OrderByDescending(s => s.Category.Name)
+                .Select(i => new ProductDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Price = i.Price,
+                    Category = i.Category.Name,
+                    ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
+                })
+                .ToListAsync();
+
+            return View(productVms);
         }
 
-        // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.ProductEntity == null)
+            if(id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.ProductEntity
+            var productEntity = await _context.ProductEntity
                 .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if(productEntity == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            ProductDetailsViewModel productVm = new ProductDetailsViewModel()
+            {
+                Id = productEntity.Id,
+                Name = productEntity.Name,
+                Price = productEntity.Price,
+                Category = productEntity.Category.Name,
+                ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
+            };
+
+            return View(productVm);
         }
 
-        // GET: Products/Create
         public IActionResult Create()
         {
-            ProductCreateViewModel model = new ProductCreateViewModel();
-            model.Categories = categories;
-            model.Shelves = shelves;
-            model.Aisles = aisles;
+            ProductCreateViewModel productVm = new ProductCreateViewModel()
+            {
+                Categories = categories,
+                Shelves = shelves,
+                Aisles = aisles
+            };
             
-            return View(model);
+            return View(productVm);
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductCreateViewModel productVm)
         {
-            ProductEntity product = new ProductEntity()
+            ProductEntity productEntity = new ProductEntity()
             {
                 Name = productVm.Name,
                 Price = productVm.Price,
@@ -80,56 +89,58 @@ namespace Sklepix.Controllers
                 Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
             };
 
-            if(product.Category == null)
+            if(productEntity.Category == null)
             {
                 throw new Exception();
             }
 
             if(ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(productEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
+            productVm.Categories = categories;
+            productVm.Shelves = shelves;
+            productVm.Aisles = aisles;
+
             return View(productVm);
         }
 
-        // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ProductEntity == null)
+            if(id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.ProductEntity.FindAsync(id);
-            if (product == null)
+            var productEntity = await _context.ProductEntity.FindAsync(id);
+            if(productEntity == null)
             {
                 return NotFound();
             }
+
             ProductCreateViewModel productVm = new ProductCreateViewModel()
             {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
+                Id = productEntity.Id,
+                Name = productEntity.Name,
+                Price = productEntity.Price,
                 Categories = categories,
-                CategoryId = product.Category != null ? product.Category.Id : throw new Exception(),
+                CategoryId = productEntity.Category.Id,
                 Shelves = shelves,
-                ShelfId = product.Shelf != null ? product.Shelf.Id : throw new Exception(),
+                ShelfId = productEntity.Shelf.Id,
                 Aisles = aisles
             };
+
             return View(productVm);
         }
 
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductCreateViewModel productVm)
         {
-            ProductEntity product = new ProductEntity()
+            ProductEntity productEntity = new ProductEntity()
             {
                 Id = productVm.Id,
                 Name = productVm.Name,
@@ -138,25 +149,21 @@ namespace Sklepix.Controllers
                 Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
             };
 
-            if(product.Category == null)
-            {
-                throw new Exception();
-            }
-            if (id != product.Id)
+            if(id != productEntity.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(productEntity);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch(DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if(!ProductExists(productEntity.Id))
                     {
                         return NotFound();
                     }
@@ -167,40 +174,52 @@ namespace Sklepix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+
+            productVm.Categories = categories;
+            productVm.Shelves = shelves;
+            productVm.Aisles = aisles;
+
+            return View(productVm);
         }
 
-        // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.ProductEntity == null)
+            if(id == null || _context.ProductEntity == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.ProductEntity
+            var productEntity = await _context.ProductEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            if(productEntity == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            ProductDetailsViewModel productVm = new ProductDetailsViewModel()
+            {
+                Id = productEntity.Id,
+                Name = productEntity.Name,
+                Price = productEntity.Price,
+                Category = productEntity.Category.Name,
+                ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
+            };
+
+            return View(productVm);
         }
 
-        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ProductEntity == null)
+            if(_context.ProductEntity == null)
             {
                 return Problem("Entity set 'SklepixContext.Product'  is null.");
             }
-            var product = await _context.ProductEntity.FindAsync(id);
-            if (product != null)
+            var productEntity = await _context.ProductEntity.FindAsync(id);
+            if(productEntity != null)
             {
-                _context.ProductEntity.Remove(product);
+                _context.ProductEntity.Remove(productEntity);
             }
             
             await _context.SaveChangesAsync();

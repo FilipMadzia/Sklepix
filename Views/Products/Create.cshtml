@@ -16,17 +16,17 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Nazwa</label>
+                <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" autofocus />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label">Cena</label>
+                <label asp-for="Price" class="control-label"></label>
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label">Kategoria</label>
+                <label asp-for="CategoryId" class="control-label"></label>
                 <select asp-for="CategoryId" class="form-control">
                     @foreach(CategoryEntity category in categories)
                     {
@@ -35,7 +35,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="ShelfId" class="control-label">Półka w alejce</label>
+                <label asp-for="ShelfId" class="control-label"></label>
                 <select asp-for="ShelfId" class="form-control">
                     @foreach (ShelfEntity shelf in shelves)
                     {

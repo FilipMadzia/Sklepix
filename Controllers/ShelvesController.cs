@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
@@ -22,18 +17,23 @@ namespace Sklepix.Controllers
             aisles = _context.AisleEntity!= null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
         }
 
-        // GET: ShelfEntities
         public async Task<IActionResult> Index()
         {
-              return _context.ShelfEntity != null ? 
-                          View(await _context.ShelfEntity.OrderByDescending(s => s.Aisle.Name).ToListAsync()) :
-                          Problem("Entity set 'SklepixContext.ShelfEntity'  is null.");
+            List<ShelfDetailsViewModel> shelfVms = await _context.ShelfEntity
+                .Select(i => new ShelfDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Number = i.Number,
+                    Aisle = i.Aisle.Name
+                })
+                .ToListAsync();
+
+            return View(shelfVms);
         }
 
-        // GET: ShelfEntities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.ShelfEntity == null)
+            if(id == null || _context.ShelfEntity == null)
             {
                 return NotFound();
             }
@@ -41,60 +41,62 @@ namespace Sklepix.Controllers
             var shelfEntity = await _context.ShelfEntity
                 .Include(m => m.Aisle)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (shelfEntity == null)
+            if(shelfEntity == null)
             {
                 return NotFound();
             }
 
-            return View(shelfEntity);
+            ShelfDetailsViewModel shelfVm = new ShelfDetailsViewModel()
+            {
+                Id = shelfEntity.Id,
+                Number = shelfEntity.Number,
+                Aisle = shelfEntity.Aisle.Name
+            };
+
+            return View(shelfVm);
         }
 
-        // GET: ShelfEntities/Create
         public IActionResult Create()
         {
-            ShelfCreateViewModel model = new ShelfCreateViewModel();
-            model.Aisles = _context.AisleEntity != null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
+            ShelfCreateViewModel shelfVm = new ShelfCreateViewModel();
+            shelfVm.Aisles = _context.AisleEntity != null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
             
-            return View(model);
+            return View(shelfVm);
         }
 
-        // POST: ShelfEntities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShelfCreateViewModel shelfVm)
         {
-            ShelfEntity shelf = new ShelfEntity()
+            ShelfEntity shelfEntity = new ShelfEntity()
             {
                 Number = shelfVm.Number,
                 Aisle = aisles.Find(x => x.Id == shelfVm.AisleId)
             };
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                _context.Add(shelf);
+                _context.Add(shelfEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(shelf);
+            return View(shelfVm);
         }
 
-        // GET: ShelfEntities/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ShelfEntity == null)
+            if(id == null || _context.ShelfEntity == null)
             {
                 return NotFound();
             }
 
             var shelfEntity = await _context.ShelfEntity.FindAsync(id);
-            if (shelfEntity == null)
+            if(shelfEntity == null)
             {
                 return NotFound();
             }
 
-            ShelfCreateViewModel shelfViewModel = new ShelfCreateViewModel()
+            ShelfCreateViewModel shelfVm = new ShelfCreateViewModel()
             {
                 Id = shelfEntity.Id,
                 Number = shelfEntity.Number,
@@ -102,12 +104,9 @@ namespace Sklepix.Controllers
                 AisleId = shelfEntity.Aisle.Id
             };
 
-            return View(shelfViewModel);
+            return View(shelfVm);
         }
 
-        // POST: ShelfEntities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ShelfCreateViewModel shelfVm)
@@ -119,12 +118,12 @@ namespace Sklepix.Controllers
                 Aisle = aisles.Find(x => x.Id == shelfVm.AisleId)
             };
 
-            if (id != shelfEntity.Id)
+            if(id != shelfEntity.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 try
                 {
@@ -144,38 +143,44 @@ namespace Sklepix.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(shelfEntity);
+
+            return View(shelfVm);
         }
 
-        // GET: ShelfEntities/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.ShelfEntity == null)
+            if(id == null || _context.ShelfEntity == null)
             {
                 return NotFound();
             }
 
             var shelfEntity = await _context.ShelfEntity
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (shelfEntity == null)
+            if(shelfEntity == null)
             {
                 return NotFound();
             }
 
-            return View(shelfEntity);
+            ShelfDetailsViewModel shelfVm = new ShelfDetailsViewModel()
+            {
+                Id = shelfEntity.Id,
+                Number = shelfEntity.Number,
+                Aisle = shelfEntity.Aisle.Name
+            };
+
+            return View(shelfVm);
         }
 
-        // POST: ShelfEntities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ShelfEntity == null)
+            if(_context.ShelfEntity == null)
             {
                 return Problem("Entity set 'SklepixContext.ShelfEntity'  is null.");
             }
             var shelfEntity = await _context.ShelfEntity.FindAsync(id);
-            if (shelfEntity != null)
+            if(shelfEntity != null)
             {
                 _context.ShelfEntity.Remove(shelfEntity);
             }

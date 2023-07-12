@@ -1,10 +1,8 @@
-﻿@using Sklepix.Data.Entities
-@model ProductEntity
+﻿@model ProductDetailsViewModel
 
 @{
     ViewData["Title"] = "Szczegóły produktu";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    string? categoryName = Model.Category != null ? Model.Category.Name : String.Empty;
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -31,17 +29,16 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Category.Name) kategorii
+            @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => categoryName)
+            @Html.DisplayFor(model => model.Category)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Shelf.Number) półki
+            @Html.DisplayNameFor(model => model.ShelfAndAisle)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Shelf.Number) | 
-            @Html.DisplayFor(model => model.Shelf.Aisle.Name)
+            @Html.DisplayFor(model => model.ShelfAndAisle)
         </dd>
     </dl>
 </div>
