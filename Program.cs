@@ -1,20 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Sklepix.Data;
+using Sklepix.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SklepixContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SklepixContext") ?? throw new InvalidOperationException("Connection string 'SklepixContext' not found.")));
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<AisleRepository>();
+builder.Services.AddTransient<CategoryRepository>();
+builder.Services.AddTransient<ProductRepository>();
+builder.Services.AddTransient<ShelfRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

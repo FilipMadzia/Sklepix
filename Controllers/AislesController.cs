@@ -1,42 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sklepix.Data;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
+using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
     public class AislesController : Controller
     {
-        private readonly SklepixContext _context;
+        private readonly AisleRepository _aisleRepository;
 
-        public AislesController(SklepixContext context)
+        public AislesController(AisleRepository aisleRepository)
         {
-            _context = context;
+            _aisleRepository = aisleRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<AisleDetailsViewModel> aisleVms = await _context.AisleEntity
+            List<AisleDetailsViewModel> aisleVms = _aisleRepository.GetAisles()
                 .Select(i => new AisleDetailsViewModel()
                 {
                     Id = i.Id,
                     Name = i.Name
                 })
-                .ToListAsync();
+                .ToList();
 
             return View(aisleVms);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id = -1)
         {
-            if(id == null || _context.AisleEntity == null)
+            if(id == -1 || _aisleRepository == null)
             {
                 return NotFound();
             }
 
-            var aisleEntity = await _context.AisleEntity
-                .FirstOrDefaultAsync(m => m.Id == id);
+            AisleEntity aisleEntity = _aisleRepository.GetAisleById(id);
+
             if(aisleEntity == null)
             {
                 return NotFound();
@@ -58,7 +58,7 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AisleCreateViewModel aisleVm)
+        public IActionResult Create(AisleCreateViewModel aisleVm)
         {
             AisleEntity aisleEntity = new AisleEntity()
             {
@@ -66,23 +66,24 @@ namespace Sklepix.Controllers
                 Name = aisleVm.Name
             };
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                _context.Add(aisleEntity);
-                await _context.SaveChangesAsync();
+                _aisleRepository.InsertAisle(aisleEntity);
+                _aisleRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(aisleVm);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id = -1)
         {
-            if(id == null || _context.AisleEntity == null)
+            if(id == -1 || _aisleRepository == null)
             {
                 return NotFound();
             }
 
-            var aisleEntity = await _context.AisleEntity.FindAsync(id);
+            AisleEntity aisleEntity = _aisleRepository.GetAisleById(id);
+
             if(aisleEntity == null)
             {
                 return NotFound();
@@ -99,7 +100,7 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AisleCreateViewModel aisleVm)
+        public IActionResult Edit(int id, AisleCreateViewModel aisleVm)
         {
             AisleEntity aisleEntity = new AisleEntity()
             {
@@ -116,12 +117,12 @@ namespace Sklepix.Controllers
             {
                 try
                 {
-                    _context.Update(aisleEntity);
-                    await _context.SaveChangesAsync();
+                    _aisleRepository.UpdateAisle(aisleEntity);
+                    _aisleRepository.Save();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch(DbUpdateConcurrencyException)
                 {
-                    if (!AisleEntityExists(aisleEntity.Id))
+                    if(_aisleRepository.GetAisleById(id) == null)
                     {
                         return NotFound();
                     }
@@ -135,15 +136,15 @@ namespace Sklepix.Controllers
             return View(aisleVm);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id = -1)
         {
-            if(id == null || _context.AisleEntity == null)
+            if(id == -1 || _aisleRepository == null)
             {
                 return NotFound();
             }
 
-            var aisleEntity = await _context.AisleEntity
-                .FirstOrDefaultAsync(m => m.Id == id);
+            AisleEntity aisleEntity = _aisleRepository.GetAisleById(id);
+
             if(aisleEntity == null)
             {
                 return NotFound();
@@ -160,21 +161,22 @@ namespace Sklepix.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if(_context.AisleEntity == null)
+            if(_aisleRepository == null)
             {
                 return Problem("Entity set 'SklepixContext.AisleEntity'  is null.");
             }
-            var aisleEntity = await _context.AisleEntity.FindAsync(id);
+            AisleEntity aisleEntity = _aisleRepository.GetAisleById(id);
+
             if(aisleEntity != null)
             {
-                _context.AisleEntity.Remove(aisleEntity);
+                _aisleRepository.DeleteAisle(id);
             }
 
             try
             {
-                await _context.SaveChangesAsync();
+                _aisleRepository.Save();
             }
             catch
             {
@@ -187,11 +189,6 @@ namespace Sklepix.Controllers
                 return View(aisleVm);
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AisleEntityExists(int id)
-        {
-          return (_context.AisleEntity?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

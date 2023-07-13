@@ -1,43 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Sklepix.Data;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
+using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly SklepixContext _context;
+        private readonly CategoryRepository _categoryRepository;
 
-        public CategoriesController(SklepixContext context)
+        public CategoriesController(CategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<CategoryDetailsViewModel> categoryVms = await _context.CategoryEntity
+            List<CategoryDetailsViewModel> categoryVms = _categoryRepository.GetCategories()
                 .Select(i => new CategoryDetailsViewModel()
                 {
                     Id = i.Id,
                     Name = i.Name
                 })
-                .ToListAsync();
+                .ToList();
 
             return View(categoryVms);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id = -1)
         {
-            if(id == null || _context.CategoryEntity == null)
+            if(id == -1 || _categoryRepository == null)
             {
                 return NotFound();
             }
 
-            var categoryEntity = await _context.CategoryEntity
-                .FirstOrDefaultAsync(m => m.Id == id);
+            CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
+
             if(categoryEntity == null)
             {
                 return NotFound();
@@ -59,7 +58,7 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryCreateViewModel categoryVm)
+        public IActionResult Create(CategoryCreateViewModel categoryVm)
         {
             CategoryEntity categoryEntity = new CategoryEntity()
             {
@@ -69,22 +68,23 @@ namespace Sklepix.Controllers
 
             if(ModelState.IsValid)
             {
-                _context.Add(categoryEntity);
-                await _context.SaveChangesAsync();
+                _categoryRepository.InsertCategory(categoryEntity);
+                _categoryRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
 
             return View(categoryVm);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id = -1)
         {
-            if(id == null || _context.CategoryEntity == null)
+            if(id == -1 || _categoryRepository == null)
             {
                 return NotFound();
             }
 
-            var categoryEntity = await _context.CategoryEntity.FindAsync(id);
+            CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
+
             if(categoryEntity == null)
             {
                 return NotFound();
@@ -101,7 +101,7 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CategoryCreateViewModel categoryVm)
+        public IActionResult Edit(int id, CategoryCreateViewModel categoryVm)
         {
             CategoryEntity categoryEntity = new CategoryEntity()
             {
@@ -118,12 +118,12 @@ namespace Sklepix.Controllers
             {
                 try
                 {
-                    _context.Update(categoryEntity);
-                    await _context.SaveChangesAsync();
+                    _categoryRepository.UpdateCategory(categoryEntity);
+                    _categoryRepository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryEntityExists(categoryEntity.Id))
+                    if(_categoryRepository.GetCategoryById(id) == null)
                     {
                         return NotFound();
                     }
@@ -138,16 +138,16 @@ namespace Sklepix.Controllers
             return View(categoryVm);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id = -1)
         {
-            if (id == null || _context.CategoryEntity == null)
+            if(id == -1 || _categoryRepository == null)
             {
                 return NotFound();
             }
 
-            var categoryEntity = await _context.CategoryEntity
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (categoryEntity == null)
+            CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
+
+            if(categoryEntity == null)
             {
                 return NotFound();
             }
@@ -163,21 +163,23 @@ namespace Sklepix.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if(_context.CategoryEntity == null)
+            if(_categoryRepository == null)
             {
                 return Problem("Entity set 'SklepixContext.CategoryEntity'  is null.");
             }
-            var categoryEntity = await _context.CategoryEntity.FindAsync(id);
+
+            CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
+
             if(categoryEntity != null)
             {
-                _context.CategoryEntity.Remove(categoryEntity);
+                _categoryRepository.DeleteCategory(id);
             }
             
             try
             {
-                await _context.SaveChangesAsync();
+                _categoryRepository.Save();
             }
             catch
             {
@@ -190,11 +192,6 @@ namespace Sklepix.Controllers
                 return View(modelVm);
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoryEntityExists(int id)
-        {
-          return (_context.CategoryEntity?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

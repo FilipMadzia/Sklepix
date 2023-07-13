@@ -1,30 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sklepix.Data;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
+using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly SklepixContext _context;
-        private readonly List<CategoryEntity> categories;
-        private readonly List<ShelfEntity> shelves;
-        private readonly List<AisleEntity> aisles;
+        private readonly ProductRepository _productRepository;
+        private readonly CategoryRepository _categoryRepository;
+        private readonly ShelfRepository _shelfRepository;
+        private readonly AisleRepository _aisleRepository;
 
-        public ProductsController(SklepixContext context)
+        public ProductsController(ProductRepository productRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, AisleRepository aisleRepository)
         {
-            _context = context;
-            categories = _context.CategoryEntity != null ? _context.CategoryEntity.ToList() : new List<CategoryEntity>();
-            shelves = _context.ShelfEntity!= null ? _context.ShelfEntity.OrderByDescending(s => s.Aisle.Name).ToList() : new List<ShelfEntity>();
-            aisles = _context.AisleEntity!= null ? _context.AisleEntity.ToList() : new List<AisleEntity>();
+            _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _shelfRepository = shelfRepository;
+            _aisleRepository = aisleRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<ProductDetailsViewModel> productVms = await _context.ProductEntity
-                .OrderByDescending(s => s.Category.Name)
+            List<ProductDetailsViewModel> productVms = _productRepository.GetProducts()
                 .Select(i => new ProductDetailsViewModel()
                 {
                     Id = i.Id,
@@ -33,21 +32,20 @@ namespace Sklepix.Controllers
                     Category = i.Category.Name,
                     ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
                 })
-                .ToListAsync();
+                .ToList();
 
             return View(productVms);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id = -1)
         {
-            if(id == null || _context.ProductEntity == null)
+            if(id == -1 || _productRepository == null)
             {
                 return NotFound();
             }
 
-            var productEntity = await _context.ProductEntity
-                .Include(m => m.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            ProductEntity productEntity = _productRepository.GetProductById(id);
+
             if(productEntity == null)
             {
                 return NotFound();
@@ -69,9 +67,9 @@ namespace Sklepix.Controllers
         {
             ProductCreateViewModel productVm = new ProductCreateViewModel()
             {
-                Categories = categories,
-                Shelves = shelves,
-                Aisles = aisles
+                Categories = _categoryRepository.GetCategories(),
+                Shelves = _shelfRepository.GetShelves(),
+                Aisles = _aisleRepository.GetAisles()
             };
             
             return View(productVm);
@@ -79,14 +77,14 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductCreateViewModel productVm)
+        public IActionResult Create(ProductCreateViewModel productVm)
         {
             ProductEntity productEntity = new ProductEntity()
             {
                 Name = productVm.Name,
                 Price = productVm.Price,
-                Category = categories.Find(x => x.Id == productVm.CategoryId),
-                Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
+                Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
+                Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
             };
 
             if(productEntity.Category == null)
@@ -96,26 +94,27 @@ namespace Sklepix.Controllers
 
             if(ModelState.IsValid)
             {
-                _context.Add(productEntity);
-                await _context.SaveChangesAsync();
+                _productRepository.InsertProduct(productEntity);
+                _productRepository.Save();
                 return RedirectToAction(nameof(Index));
             }
 
-            productVm.Categories = categories;
-            productVm.Shelves = shelves;
-            productVm.Aisles = aisles;
+            productVm.Categories = _categoryRepository.GetCategories();
+            productVm.Shelves = _shelfRepository.GetShelves();
+            productVm.Aisles = _aisleRepository.GetAisles();
 
             return View(productVm);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id = -1)
         {
-            if(id == null || _context.ProductEntity == null)
+            if(id == -1 || _productRepository == null)
             {
                 return NotFound();
             }
 
-            var productEntity = await _context.ProductEntity.FindAsync(id);
+            ProductEntity productEntity = _productRepository.GetProductById(id);
+
             if(productEntity == null)
             {
                 return NotFound();
@@ -126,11 +125,11 @@ namespace Sklepix.Controllers
                 Id = productEntity.Id,
                 Name = productEntity.Name,
                 Price = productEntity.Price,
-                Categories = categories,
+                Categories = _categoryRepository.GetCategories(),
                 CategoryId = productEntity.Category.Id,
-                Shelves = shelves,
+                Shelves = _shelfRepository.GetShelves(),
                 ShelfId = productEntity.Shelf.Id,
-                Aisles = aisles
+                Aisles = _aisleRepository.GetAisles()
             };
 
             return View(productVm);
@@ -138,15 +137,15 @@ namespace Sklepix.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductCreateViewModel productVm)
+        public IActionResult Edit(int id, ProductCreateViewModel productVm)
         {
             ProductEntity productEntity = new ProductEntity()
             {
                 Id = productVm.Id,
                 Name = productVm.Name,
                 Price = productVm.Price,
-                Category = categories.Find(x => x.Id == productVm.CategoryId),
-                Shelf = shelves.Find(x => x.Id == productVm.ShelfId)
+                Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
+                Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
             };
 
             if(id != productEntity.Id)
@@ -158,12 +157,12 @@ namespace Sklepix.Controllers
             {
                 try
                 {
-                    _context.Update(productEntity);
-                    await _context.SaveChangesAsync();
+                    _productRepository.UpdateProduct(productEntity);
+                    _productRepository.Save();
                 }
                 catch(DbUpdateConcurrencyException)
                 {
-                    if(!ProductExists(productEntity.Id))
+                    if(_productRepository.GetProductById(id) == null)
                     {
                         return NotFound();
                     }
@@ -175,22 +174,22 @@ namespace Sklepix.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            productVm.Categories = categories;
-            productVm.Shelves = shelves;
-            productVm.Aisles = aisles;
+            productVm.Categories = _categoryRepository.GetCategories();
+            productVm.Shelves = _shelfRepository.GetShelves();
+            productVm.Aisles = _aisleRepository.GetAisles();
 
             return View(productVm);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id = -1)
         {
-            if(id == null || _context.ProductEntity == null)
+            if(id == -1 || _productRepository == null)
             {
                 return NotFound();
             }
 
-            var productEntity = await _context.ProductEntity
-                .FirstOrDefaultAsync(m => m.Id == id);
+            ProductEntity productEntity = _productRepository.GetProductById(id);
+
             if(productEntity == null)
             {
                 return NotFound();
@@ -210,25 +209,21 @@ namespace Sklepix.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            if(_context.ProductEntity == null)
+            if(_productRepository == null)
             {
                 return Problem("Entity set 'SklepixContext.Product'  is null.");
             }
-            var productEntity = await _context.ProductEntity.FindAsync(id);
+            ProductEntity productEntity = _productRepository.GetProductById(id);
+
             if(productEntity != null)
             {
-                _context.ProductEntity.Remove(productEntity);
+                _productRepository.DeleteProduct(id);
             }
             
-            await _context.SaveChangesAsync();
+            _productRepository.Save();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductExists(int id)
-        {
-            return (_context.ProductEntity?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
