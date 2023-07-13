@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Edytuj półkę";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<AisleEntity> aisles = Model.Aisles != null ? Model.Aisles : new List<AisleEntity>();
+    List<AisleEntity> aisles = Model.Aisles;
 }
 
 <h1>@ViewData["Title"]</h1>

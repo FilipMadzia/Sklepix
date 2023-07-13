@@ -4,8 +4,8 @@
 @{
     ViewData["Title"] = "Dodaj produkt";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    List<CategoryEntity> categories = Model.Categories != null ? Model.Categories : new List<CategoryEntity>();
-    List<ShelfEntity> shelves = Model.Shelves != null ? Model.Shelves : new List<ShelfEntity>();
+    List<CategoryEntity> categories = Model.Categories;
+    List<ShelfEntity> shelves = Model.Shelves;
 }
 
 <h1>@ViewData["Title"]</h1>
