@@ -17,7 +17,13 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Count)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category)
@@ -35,7 +41,13 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price) zł
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice) zł
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category)

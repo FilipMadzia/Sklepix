@@ -28,7 +28,9 @@ namespace Sklepix.Controllers
                 {
                     Id = i.Id,
                     Name = i.Name,
+                    Count = i.Count,
                     Price = i.Price,
+                    TotalPrice = i.Count * i.Price,
                     Category = i.Category.Name,
                     ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
                 })
@@ -55,7 +57,9 @@ namespace Sklepix.Controllers
             {
                 Id = productEntity.Id,
                 Name = productEntity.Name,
+                Count = productEntity.Count,
                 Price = productEntity.Price,
+                TotalPrice = productEntity.Count * productEntity.Price,
                 Category = productEntity.Category.Name,
                 ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
             };
@@ -83,6 +87,7 @@ namespace Sklepix.Controllers
             {
                 Name = productVm.Name,
                 Price = productVm.Price,
+                Count = productVm.Count,
                 Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
                 Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
             };
@@ -124,6 +129,7 @@ namespace Sklepix.Controllers
             {
                 Id = productEntity.Id,
                 Name = productEntity.Name,
+                Count = productEntity.Count,
                 Price = productEntity.Price,
                 Categories = _categoryRepository.GetCategories(),
                 CategoryId = productEntity.Category.Id,
@@ -143,6 +149,7 @@ namespace Sklepix.Controllers
             {
                 Id = productVm.Id,
                 Name = productVm.Name,
+                Count = productVm.Count,
                 Price = productVm.Price,
                 Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
                 Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
@@ -199,6 +206,7 @@ namespace Sklepix.Controllers
             {
                 Id = productEntity.Id,
                 Name = productEntity.Name,
+                Count = productEntity.Count,
                 Price = productEntity.Price,
                 Category = productEntity.Category.Name,
                 ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name

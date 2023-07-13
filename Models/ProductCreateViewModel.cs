@@ -11,6 +11,9 @@ namespace Sklepix.Models
         [DisplayName("Nazwa")]
         public string? Name { get; set; }
         [Required]
+        [DisplayName("Ilość")]
+        public int Count { get; set; }
+        [Required]
         [DisplayName("Cena")]
         public decimal Price { get; set; }
         public List<CategoryEntity>? Categories { get; set; }

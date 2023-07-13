@@ -12,7 +12,7 @@ using Sklepix.Data;
 namespace Sklepix.Data.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    [Migration("20230713160821_init")]
+    [Migration("20230713203648_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,6 +104,9 @@ namespace Sklepix.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")

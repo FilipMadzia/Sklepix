@@ -22,11 +22,23 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Count)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.Price) zł
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalPrice) zł
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
