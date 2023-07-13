@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
@@ -174,7 +175,20 @@ namespace Sklepix.Controllers
                 _context.CategoryEntity.Remove(categoryEntity);
             }
             
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                ModelState.AddModelError("Name", "Istnieją produkty korzystające z tej kategorii. Usuń/zmień wszystkie produkty korzystające z tej kategorii");
+                CategoryDetailsViewModel modelVm = new CategoryDetailsViewModel()
+                {
+                    Id = categoryEntity.Id,
+                    Name = categoryEntity.Name
+                };
+                return View(modelVm);
+            }
             return RedirectToAction(nameof(Index));
         }
 

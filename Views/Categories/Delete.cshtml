@@ -22,6 +22,8 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
+
+    <span class="text-lg-start text-danger" asp-validation-for="Name"></span>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />

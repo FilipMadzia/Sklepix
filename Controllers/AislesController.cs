@@ -171,8 +171,21 @@ namespace Sklepix.Controllers
             {
                 _context.AisleEntity.Remove(aisleEntity);
             }
-            
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                ModelState.AddModelError("Name", "Istnieją półki korzystające z tej alejki. Usuń/zmień wszystkie półki korzystające z tej alejki");
+                AisleDetailsViewModel aisleVm= new AisleDetailsViewModel()
+                {
+                    Id = aisleEntity.Id,
+                    Name = aisleEntity.Name
+                };
+                return View(aisleVm);
+            }
             return RedirectToAction(nameof(Index));
         }
 
