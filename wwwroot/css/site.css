@@ -1,22 +1,42 @@
 html {
-  font-size: 14px;
+	font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+	html {
+		font-size: 16px;
+	}
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+	position: relative;
+	min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+	margin-bottom: 60px;
 }
 
 .text-right {
-    text-align: right;
+	text-align: right;
+}
+
+.row-link {
+	cursor: pointer;
+}
+
+.row-link:hover {
+	background-color: ghostwhite;
+}
+
+.icon {
+	width: 32px;
+}
+
+.th-sm {
+	width: 64px;
+}
+
+.th-md {
+	width: 136px;
 }

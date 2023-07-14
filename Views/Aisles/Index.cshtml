@@ -1,36 +1,32 @@
 ﻿@model IEnumerable<AisleDetailsViewModel>
 
 @{
-    ViewData["Title"] = "Alejki";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Alejki";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>@ViewData["Title"] <a class="btn btn-primary" asp-action="Create">Dodaj produkt</a></h1>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Dodaj alejkę</a>
-</p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="text-right">
-                <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
-            </td>
-        </tr>
-    }
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody >
+		@foreach(var item in Model)
+		{
+			<tr class="align-middle row-link" onclick="location.href='@Url.Action("Details", new { Id = item.Id })'">
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td class="text-right">
+					<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

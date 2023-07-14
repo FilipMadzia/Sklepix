@@ -6,232 +6,232 @@ using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-    public class ProductsController : Controller
-    {
-        private readonly ProductRepository _productRepository;
-        private readonly CategoryRepository _categoryRepository;
-        private readonly ShelfRepository _shelfRepository;
-        private readonly AisleRepository _aisleRepository;
+	public class ProductsController : Controller
+	{
+		private readonly ProductRepository _productRepository;
+		private readonly CategoryRepository _categoryRepository;
+		private readonly ShelfRepository _shelfRepository;
+		private readonly AisleRepository _aisleRepository;
 
-        public ProductsController(ProductRepository productRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, AisleRepository aisleRepository)
-        {
-            _productRepository = productRepository;
-            _categoryRepository = categoryRepository;
-            _shelfRepository = shelfRepository;
-            _aisleRepository = aisleRepository;
-        }
+		public ProductsController(ProductRepository productRepository, CategoryRepository categoryRepository, ShelfRepository shelfRepository, AisleRepository aisleRepository)
+		{
+			_productRepository = productRepository;
+			_categoryRepository = categoryRepository;
+			_shelfRepository = shelfRepository;
+			_aisleRepository = aisleRepository;
+		}
 
-        public IActionResult Index()
-        {
-            List<ProductDetailsViewModel> productVms = _productRepository.GetProducts()
-                .Select(i => new ProductDetailsViewModel()
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    Count = i.Count,
-                    Price = i.Price,
-                    TotalPrice = i.Count * i.Price,
-                    Category = i.Category.Name,
-                    ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
-                })
-                .ToList();
+		public IActionResult Index()
+		{
+			List<ProductDetailsViewModel> productVms = _productRepository.GetProducts()
+				.Select(i => new ProductDetailsViewModel()
+				{
+					Id = i.Id,
+					Name = i.Name,
+					Count = i.Count,
+					Price = i.Price,
+					TotalPrice = i.Count * i.Price,
+					Category = i.Category.Name,
+					ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
+				})
+				.ToList();
 
-            return View(productVms);
-        }
+			return View(productVms);
+		}
 
-        public IActionResult Details(int id = -1)
-        {
-            if(id == -1 || _productRepository == null)
-            {
-                return NotFound();
-            }
+		public IActionResult Details(int id = -1)
+		{
+			if(id == -1 || _productRepository == null)
+			{
+				return NotFound();
+			}
 
-            ProductEntity productEntity = _productRepository.GetProductById(id);
+			ProductEntity productEntity = _productRepository.GetProductById(id);
 
-            if(productEntity == null)
-            {
-                return NotFound();
-            }
+			if(productEntity == null)
+			{
+				return NotFound();
+			}
 
-            ProductDetailsViewModel productVm = new ProductDetailsViewModel()
-            {
-                Id = productEntity.Id,
-                Name = productEntity.Name,
-                Count = productEntity.Count,
-                Price = productEntity.Price,
-                TotalPrice = productEntity.Count * productEntity.Price,
-                Category = productEntity.Category.Name,
-                ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
-            };
+			ProductDetailsViewModel productVm = new ProductDetailsViewModel()
+			{
+				Id = productEntity.Id,
+				Name = productEntity.Name,
+				Count = productEntity.Count,
+				Price = productEntity.Price,
+				TotalPrice = productEntity.Count * productEntity.Price,
+				Category = productEntity.Category.Name,
+				ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
+			};
 
-            return View(productVm);
-        }
+			return View(productVm);
+		}
 
-        public IActionResult Create()
-        {
-            ProductCreateViewModel productVm = new ProductCreateViewModel()
-            {
-                Categories = _categoryRepository.GetCategories(),
-                Shelves = _shelfRepository.GetShelves(),
-                Aisles = _aisleRepository.GetAisles()
-            };
-            
-            return View(productVm);
-        }
+		public IActionResult Create()
+		{
+			ProductCreateViewModel productVm = new ProductCreateViewModel()
+			{
+				Categories = _categoryRepository.GetCategories(),
+				Shelves = _shelfRepository.GetShelves(),
+				Aisles = _aisleRepository.GetAisles()
+			};
+			
+			return View(productVm);
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(ProductCreateViewModel productVm)
-        {
-            ProductEntity productEntity = new ProductEntity()
-            {
-                Name = productVm.Name,
-                Price = productVm.Price,
-                Count = productVm.Count,
-                Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
-                Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
-            };
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Create(ProductCreateViewModel productVm)
+		{
+			ProductEntity productEntity = new ProductEntity()
+			{
+				Name = productVm.Name,
+				Price = productVm.Price,
+				Count = productVm.Count,
+				Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
+				Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
+			};
 
-            if(productEntity.Category == null)
-            {
-                throw new Exception();
-            }
+			if(productEntity.Category == null)
+			{
+				throw new Exception();
+			}
 
-            if(ModelState.IsValid)
-            {
-                _productRepository.InsertProduct(productEntity);
-                _productRepository.Save();
-                return RedirectToAction(nameof(Index));
-            }
+			if(ModelState.IsValid)
+			{
+				_productRepository.InsertProduct(productEntity);
+				_productRepository.Save();
+				return RedirectToAction(nameof(Index));
+			}
 
-            productVm.Categories = _categoryRepository.GetCategories();
-            productVm.Shelves = _shelfRepository.GetShelves();
-            productVm.Aisles = _aisleRepository.GetAisles();
+			productVm.Categories = _categoryRepository.GetCategories();
+			productVm.Shelves = _shelfRepository.GetShelves();
+			productVm.Aisles = _aisleRepository.GetAisles();
 
-            return View(productVm);
-        }
+			return View(productVm);
+		}
 
-        public IActionResult Edit(int id = -1)
-        {
-            if(id == -1 || _productRepository == null)
-            {
-                return NotFound();
-            }
+		public IActionResult Edit(int id = -1)
+		{
+			if(id == -1 || _productRepository == null)
+			{
+				return NotFound();
+			}
 
-            ProductEntity productEntity = _productRepository.GetProductById(id);
+			ProductEntity productEntity = _productRepository.GetProductById(id);
 
-            if(productEntity == null)
-            {
-                return NotFound();
-            }
+			if(productEntity == null)
+			{
+				return NotFound();
+			}
 
-            ProductCreateViewModel productVm = new ProductCreateViewModel()
-            {
-                Id = productEntity.Id,
-                Name = productEntity.Name,
-                Count = productEntity.Count,
-                Price = productEntity.Price,
-                Categories = _categoryRepository.GetCategories(),
-                CategoryId = productEntity.Category.Id,
-                Shelves = _shelfRepository.GetShelves(),
-                ShelfId = productEntity.Shelf.Id,
-                Aisles = _aisleRepository.GetAisles()
-            };
+			ProductCreateViewModel productVm = new ProductCreateViewModel()
+			{
+				Id = productEntity.Id,
+				Name = productEntity.Name,
+				Count = productEntity.Count,
+				Price = productEntity.Price,
+				Categories = _categoryRepository.GetCategories(),
+				CategoryId = productEntity.Category.Id,
+				Shelves = _shelfRepository.GetShelves(),
+				ShelfId = productEntity.Shelf.Id,
+				Aisles = _aisleRepository.GetAisles()
+			};
 
-            return View(productVm);
-        }
+			return View(productVm);
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, ProductCreateViewModel productVm)
-        {
-            ProductEntity productEntity = new ProductEntity()
-            {
-                Id = productVm.Id,
-                Name = productVm.Name,
-                Count = productVm.Count,
-                Price = productVm.Price,
-                Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
-                Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
-            };
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(int id, ProductCreateViewModel productVm)
+		{
+			ProductEntity productEntity = new ProductEntity()
+			{
+				Id = productVm.Id,
+				Name = productVm.Name,
+				Count = productVm.Count,
+				Price = productVm.Price,
+				Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
+				Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
+			};
 
-            if(id != productEntity.Id)
-            {
-                return NotFound();
-            }
+			if(id != productEntity.Id)
+			{
+				return NotFound();
+			}
 
-            if(ModelState.IsValid)
-            {
-                try
-                {
-                    _productRepository.UpdateProduct(productEntity);
-                    _productRepository.Save();
-                }
-                catch(DbUpdateConcurrencyException)
-                {
-                    if(_productRepository.GetProductById(id) == null)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
+			if(ModelState.IsValid)
+			{
+				try
+				{
+					_productRepository.UpdateProduct(productEntity);
+					_productRepository.Save();
+				}
+				catch(DbUpdateConcurrencyException)
+				{
+					if(_productRepository.GetProductById(id) == null)
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Index));
+			}
 
-            productVm.Categories = _categoryRepository.GetCategories();
-            productVm.Shelves = _shelfRepository.GetShelves();
-            productVm.Aisles = _aisleRepository.GetAisles();
+			productVm.Categories = _categoryRepository.GetCategories();
+			productVm.Shelves = _shelfRepository.GetShelves();
+			productVm.Aisles = _aisleRepository.GetAisles();
 
-            return View(productVm);
-        }
+			return View(productVm);
+		}
 
-        public IActionResult Delete(int id = -1)
-        {
-            if(id == -1 || _productRepository == null)
-            {
-                return NotFound();
-            }
+		public IActionResult Delete(int id = -1)
+		{
+			if(id == -1 || _productRepository == null)
+			{
+				return NotFound();
+			}
 
-            ProductEntity productEntity = _productRepository.GetProductById(id);
+			ProductEntity productEntity = _productRepository.GetProductById(id);
 
-            if(productEntity == null)
-            {
-                return NotFound();
-            }
+			if(productEntity == null)
+			{
+				return NotFound();
+			}
 
-            ProductDetailsViewModel productVm = new ProductDetailsViewModel()
-            {
-                Id = productEntity.Id,
-                Name = productEntity.Name,
-                Count = productEntity.Count,
-                Price = productEntity.Price,
-                Category = productEntity.Category.Name,
-                ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
-            };
+			ProductDetailsViewModel productVm = new ProductDetailsViewModel()
+			{
+				Id = productEntity.Id,
+				Name = productEntity.Name,
+				Count = productEntity.Count,
+				Price = productEntity.Price,
+				Category = productEntity.Category.Name,
+				ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
+			};
 
-            return View(productVm);
-        }
+			return View(productVm);
+		}
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            if(_productRepository == null)
-            {
-                return Problem("Entity set 'SklepixContext.Product'  is null.");
-            }
-            ProductEntity productEntity = _productRepository.GetProductById(id);
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeleteConfirmed(int id)
+		{
+			if(_productRepository == null)
+			{
+				return Problem("Entity set 'SklepixContext.Product'  is null.");
+			}
+			ProductEntity productEntity = _productRepository.GetProductById(id);
 
-            if(productEntity != null)
-            {
-                _productRepository.DeleteProduct(id);
-            }
-            
-            _productRepository.Save();
-            return RedirectToAction(nameof(Index));
-        }
-    }
+			if(productEntity != null)
+			{
+				_productRepository.DeleteProduct(id);
+			}
+			
+			_productRepository.Save();
+			return RedirectToAction(nameof(Index));
+		}
+	}
 }

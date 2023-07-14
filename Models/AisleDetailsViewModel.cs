@@ -2,10 +2,10 @@
 
 namespace Sklepix.Models
 {
-    public class AisleDetailsViewModel
-    {
-        public int Id { get; set; }
-        [DisplayName("Nazwa")]
-        public string? Name { get; set; }
-    }
+	public class AisleDetailsViewModel
+	{
+		public int Id { get; set; }
+		[DisplayName("Nazwa")]
+		public string? Name { get; set; }
+	}
 }
