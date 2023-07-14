@@ -9,10 +9,12 @@ namespace Sklepix.Controllers
 	public class AislesController : Controller
 	{
 		private readonly AisleRepository _aisleRepository;
+		private readonly ShelfRepository _shelfRepository;
 
-		public AislesController(AisleRepository aisleRepository)
+		public AislesController(AisleRepository aisleRepository, ShelfRepository shelfRepository)
 		{
 			_aisleRepository = aisleRepository;
+			_shelfRepository = shelfRepository;
 		}
 
 		public IActionResult Index()
@@ -163,31 +165,29 @@ namespace Sklepix.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteConfirmed(int id)
 		{
-			if(_aisleRepository == null)
-			{
-				return Problem("Entity set 'SklepixContext.AisleEntity'  is null.");
-			}
 			AisleEntity aisleEntity = _aisleRepository.GetAisleById(id);
 
-			if(aisleEntity != null)
+			if(aisleEntity == null)
 			{
-				_aisleRepository.DeleteAisle(id);
+				return RedirectToAction(nameof(Index));
 			}
 
-			try
+			if(_shelfRepository.GetShelves().Find(x => x.Aisle.Id == aisleEntity.Id) == null)
 			{
+				_aisleRepository.DeleteAisle(id);
 				_aisleRepository.Save();
 			}
-			catch
+			else
 			{
 				ModelState.AddModelError("Name", "Istnieją półki korzystające z tej alejki. Usuń/zmień wszystkie półki korzystające z tej alejki");
-				AisleDetailsViewModel aisleVm= new AisleDetailsViewModel()
+				AisleDetailsViewModel aisleVm = new AisleDetailsViewModel()
 				{
 					Id = aisleEntity.Id,
 					Name = aisleEntity.Name
 				};
 				return View(aisleVm);
 			}
+
 			return RedirectToAction(nameof(Index));
 		}
 	}

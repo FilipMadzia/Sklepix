@@ -9,10 +9,12 @@ namespace Sklepix.Controllers
 	public class CategoriesController : Controller
 	{
 		private readonly CategoryRepository _categoryRepository;
+		private readonly ProductRepository _productRepository;
 
-		public CategoriesController(CategoryRepository categoryRepository)
+		public CategoriesController(CategoryRepository categoryRepository, ProductRepository productRepository)
 		{
 			_categoryRepository = categoryRepository;
+			_productRepository = productRepository;
 		}
 
 		public IActionResult Index()
@@ -165,23 +167,19 @@ namespace Sklepix.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteConfirmed(int id)
 		{
-			if(_categoryRepository == null)
+			CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
+			
+			if(categoryEntity == null)
 			{
-				return Problem("Entity set 'SklepixContext.CategoryEntity'  is null.");
+				return RedirectToAction(nameof(Index));
 			}
 
-			CategoryEntity categoryEntity = _categoryRepository.GetCategoryById(id);
-
-			if(categoryEntity != null)
+			if(_productRepository.GetProducts().Find(x => x.Category.Id == categoryEntity.Id) == null)
 			{
 				_categoryRepository.DeleteCategory(id);
-			}
-			
-			try
-			{
 				_categoryRepository.Save();
 			}
-			catch
+			else
 			{
 				ModelState.AddModelError("Name", "Istnieją produkty korzystające z tej kategorii. Usuń/zmień wszystkie produkty korzystające z tej kategorii");
 				CategoryDetailsViewModel modelVm = new CategoryDetailsViewModel()

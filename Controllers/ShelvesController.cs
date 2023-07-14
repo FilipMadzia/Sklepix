@@ -10,11 +10,13 @@ namespace Sklepix.Controllers
 	{
 		private readonly ShelfRepository _shelfRepository;
 		private readonly AisleRepository _aisleRepository;
+		private readonly ProductRepository _productRepository;
 
-		public ShelvesController(ShelfRepository shelfRepository, AisleRepository aisleRepository)
+		public ShelvesController(ShelfRepository shelfRepository, AisleRepository aisleRepository, ProductRepository productRepository)
 		{
 			_shelfRepository = shelfRepository;
 			_aisleRepository = aisleRepository;
+			_productRepository = productRepository;
 		}
 
 		public IActionResult Index()
@@ -177,19 +179,30 @@ namespace Sklepix.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult DeleteConfirmed(int id)
 		{
-			if(_shelfRepository == null)
-			{
-				return Problem("Entity set 'SklepixContext.ShelfEntity'  is null.");
-			}
-
 			ShelfEntity shelfEntity = _shelfRepository.GetShelfById(id);
 
-			if(shelfEntity != null)
+			if(shelfEntity == null)
 			{
-				_shelfRepository.DeleteShelf(id);
+				return RedirectToAction(nameof(Index));
 			}
 			
-			_shelfRepository.Save();
+			if(_productRepository.GetProducts().Find(x => x.Shelf.Id == shelfEntity.Id) == null)
+			{
+				_shelfRepository.DeleteShelf(id);
+				_shelfRepository.Save();
+			}
+			else
+			{
+				ModelState.AddModelError("Number", "Istnieją produkty korzystające z tej półki. Usuń/zmień wszystkie produkty korzystające z tej półki");
+				ShelfDetailsViewModel modelVm = new ShelfDetailsViewModel()
+				{
+					Id = shelfEntity.Id,
+					Number = shelfEntity.Number,
+					Aisle = shelfEntity.Aisle.Name
+				};
+				return View(modelVm);
+			}
+
 			return RedirectToAction(nameof(Index));
 		}
 	}
