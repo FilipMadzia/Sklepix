@@ -153,7 +153,7 @@ namespace Sklepix.Controllers
                 Price = productVm.Price,
                 Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
                 Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
-            }
+            };
 
             if(id != productEntity.Id)
             {
