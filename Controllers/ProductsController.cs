@@ -88,8 +88,8 @@ namespace Sklepix.Controllers
                 Name = productVm.Name,
                 Price = productVm.Price,
                 Count = productVm.Count,
-                Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
-                Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
+                Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
+                Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
             };
 
             if(productEntity.Category == null)
@@ -151,9 +151,9 @@ namespace Sklepix.Controllers
                 Name = productVm.Name,
                 Count = productVm.Count,
                 Price = productVm.Price,
-                Category = _categoryRepository.GetCategories().Find(x => x.Id == productVm.CategoryId),
-                Shelf = _shelfRepository.GetShelves().Find(x => x.Id == productVm.ShelfId)
-            };
+                Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
+                Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
+            }
 
             if(id != productEntity.Id)
             {

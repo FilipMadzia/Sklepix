@@ -9,6 +9,7 @@ namespace Sklepix.Models
         [DisplayName("Numer")]
         public int Number { get; set; }
         public List<AisleEntity>? Aisles { get; set; }
+        [DisplayName("Alejka")]
         public int AisleId { get; set; }
     }
 }
