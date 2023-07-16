@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Data.Seeds;
 
 namespace Sklepix.Data
 {
-	public class SklepixContext : DbContext
+	public class SklepixContext : IdentityDbContext
 	{
 		public DbSet<ProductEntity> ProductEntity { get; set; } = default!;
 
@@ -14,7 +15,7 @@ namespace Sklepix.Data
 
 		public DbSet<ShelfEntity>? ShelfEntity { get; set; }
 
-		public SklepixContext (DbContextOptions<SklepixContext> options) : base(options)
+		public SklepixContext(DbContextOptions<SklepixContext> options) : base(options)
 		{
 
 		}
