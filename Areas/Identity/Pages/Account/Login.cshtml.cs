@@ -34,7 +34,7 @@ namespace Sklepix.Areas.Identity.Pages.Account
 			[Required]
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
-			[Display(Name = "Remember me?")]
+			[Display(Name = "Zapamiętać mnie?")]
 			public bool RememberMe { get; set; }
 		}
 
