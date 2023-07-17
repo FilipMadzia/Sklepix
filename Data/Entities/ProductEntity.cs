@@ -5,6 +5,7 @@
 		public int Id { get; set; }
 		public string? Name { get; set; }
 		public decimal Price { get; set; }
+		public float Margin { get; set; }
 		public int Count { get; set; }
 		public CategoryEntity? Category { get; set; }
 		public ShelfEntity? Shelf { get; set; }

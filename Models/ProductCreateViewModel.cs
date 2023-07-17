@@ -16,6 +16,9 @@ namespace Sklepix.Models
 		[Required]
 		[DisplayName("Cena")]
 		public decimal Price { get; set; }
+		[Required]
+		[DisplayName("Marża (w procentach)")]
+		public float Margin { get; set; }
 		public List<CategoryEntity>? Categories { get; set; }
 		[DisplayName("Kategoria")]
 		public int CategoryId { get; set; }

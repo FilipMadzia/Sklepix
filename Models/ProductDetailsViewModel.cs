@@ -9,10 +9,14 @@ namespace Sklepix.Models
 		public string? Name { get; set; }
 		[DisplayName("Ilość")]
 		public int Count { get; set; }
-		[DisplayName("Cena")]
-		public decimal Price { get; set; }
-		[DisplayName("Łączna wartość")]
+        [DisplayName("Cena")]
+        public decimal Price { get; set; }
+		[DisplayName("Marża")]
+        public string? Margin { get; set; }
+		[DisplayName("Łączna wartość (bez marży)")]
 		public decimal TotalPrice { get; set; }
+		[DisplayName("Łączna wartość (wraz z marżą)")]
+		public decimal TotalPriceWithMargin { get; set; }
 		[DisplayName("Kategoria")]
 		public string? Category { get; set; }
 		[DisplayName("Półka i alejka")]

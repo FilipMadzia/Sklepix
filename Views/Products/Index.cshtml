@@ -19,8 +19,11 @@
 			<th class="th-sm">
 				@Html.DisplayNameFor(model => model.Price)
 			</th>
-			<th class="th-md text-center">
-				@Html.DisplayNameFor(model => model.TotalPrice)
+			<th class="th-sm">
+				@Html.DisplayNameFor(model => model.Margin)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.TotalPriceWithMargin)
 			</th>
 			<th class="text-right">
 				@Html.DisplayNameFor(model => model.Category)
@@ -44,8 +47,11 @@
 				<td>
 					@Html.DisplayFor(modelItem => item.Price) zł
 				</td>
-				<td class="text-center">
-					@Html.DisplayFor(modelItem => item.TotalPrice) zł
+				<td>
+					@Html.DisplayFor(modelItem => item.Margin)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.TotalPriceWithMargin) zł
 				</td>
 				<td class="text-right">
 					@Html.DisplayFor(modelItem => item.Category)

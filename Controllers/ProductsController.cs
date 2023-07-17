@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
 using Sklepix.Repositories;
+using System.Drawing.Printing;
 
 namespace Sklepix.Controllers
 {
@@ -30,7 +31,9 @@ namespace Sklepix.Controllers
 					Name = i.Name,
 					Count = i.Count,
 					Price = i.Price,
+					Margin = i.Margin + "%",
 					TotalPrice = i.Count * i.Price,
+					TotalPriceWithMargin = i.Count * i.Price + (decimal)i.Margin / 100 * i.Count * i.Price,
 					Category = i.Category.Name,
 					ShelfAndAisle = i.Shelf.Number + " | " + i.Shelf.Aisle.Name
 				})
@@ -59,7 +62,9 @@ namespace Sklepix.Controllers
 				Name = productEntity.Name,
 				Count = productEntity.Count,
 				Price = productEntity.Price,
+				Margin = productEntity.Margin + "%",
 				TotalPrice = productEntity.Count * productEntity.Price,
+				TotalPriceWithMargin = productEntity.Count * productEntity.Price + (decimal)productEntity.Margin / 100 * productEntity.Count * productEntity.Price,
 				Category = productEntity.Category.Name,
 				ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
 			};
@@ -88,6 +93,7 @@ namespace Sklepix.Controllers
 				Name = productVm.Name,
 				Price = productVm.Price,
 				Count = productVm.Count,
+				Margin = productVm.Margin,
 				Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
 				Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
 			};
@@ -131,6 +137,7 @@ namespace Sklepix.Controllers
 				Name = productEntity.Name,
 				Count = productEntity.Count,
 				Price = productEntity.Price,
+				Margin = productEntity.Margin,
 				Categories = _categoryRepository.GetCategories(),
 				CategoryId = productEntity.Category.Id,
 				Shelves = _shelfRepository.GetShelves(),
@@ -151,6 +158,7 @@ namespace Sklepix.Controllers
 				Name = productVm.Name,
 				Count = productVm.Count,
 				Price = productVm.Price,
+				Margin = productVm.Margin,
 				Category = _categoryRepository.GetCategoryById(productVm.CategoryId),
 				Shelf = _shelfRepository.GetShelfById(productVm.ShelfId)
 			};
@@ -208,6 +216,9 @@ namespace Sklepix.Controllers
 				Name = productEntity.Name,
 				Count = productEntity.Count,
 				Price = productEntity.Price,
+				Margin = productEntity.Margin + "%",
+				TotalPrice = productEntity.Count * productEntity.Price,
+				TotalPriceWithMargin = productEntity.Count * productEntity.Price + (decimal)productEntity.Margin / 100 * productEntity.Count * productEntity.Price,
 				Category = productEntity.Category.Name,
 				ShelfAndAisle = productEntity.Shelf.Number + " | " + productEntity.Shelf.Aisle.Name
 			};
