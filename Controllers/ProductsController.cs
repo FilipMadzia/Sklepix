@@ -186,7 +186,7 @@ namespace Sklepix.Controllers
 						throw;
 					}
 				}
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction(nameof(Details));
 			}
 
 			productVm.Categories = _categoryRepository.GetCategories();
