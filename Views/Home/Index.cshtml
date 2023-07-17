@@ -1,9 +1,28 @@
-﻿@{
+﻿@model HomeViewModel
+
+@{
 	ViewData["Title"] = "Strona główna";
 }
 
 <div class="text-center">
 	<h1 class="display-4">Witaj w systemie Sklepix!</h1>
 	<p>Strona stworzona podczas praktyk zawodowych lipiec 2023, Filip Madzia</p>
-	<img width="50%" src="~/favicon.svg" />
+	<ul class="list-group-flush w-25 mx-auto">
+		<li class="list-group-item">
+			@Html.DisplayNameFor(model => model.ProductCount):
+			@Html.DisplayFor(model => model.ProductCount)</li>
+		<li class="list-group-item">
+			@Html.DisplayNameFor(model => model.CategoryCount):
+			@Html.DisplayFor(model => model.CategoryCount)</li>
+		<li class="list-group-item">
+			@Html.DisplayNameFor(model => model.AisleCount):
+			@Html.DisplayFor(model => model.AisleCount)
+		</li>
+		<li class="list-group-item">
+			@Html.DisplayNameFor(model => model.ShelfCount):
+			@Html.DisplayFor(model => model.ShelfCount)
+		</li>
+	</ul>
+
+	<img width="30%" src="~/favicon.svg" />
 </div>
