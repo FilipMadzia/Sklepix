@@ -13,9 +13,9 @@ namespace Sklepix.Models
         public decimal Price { get; set; }
 		[DisplayName("Marża")]
         public string? Margin { get; set; }
-		[DisplayName("Łączna wartość (bez marży)")]
+		[DisplayName("Wartość bez marży")]
 		public decimal TotalPrice { get; set; }
-		[DisplayName("Łączna wartość (wraz z marżą)")]
+		[DisplayName("Wartość z marżą")]
 		public decimal TotalPriceWithMargin { get; set; }
 		[DisplayName("Kategoria")]
 		public string? Category { get; set; }

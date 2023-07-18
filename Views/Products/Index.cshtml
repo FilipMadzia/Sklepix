@@ -10,22 +10,22 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th>
+			<th class="th-lg">
 				@Html.DisplayNameFor(model => model.Name)
 			</th>
-			<th class="th-sm">
+			<th>
 				@Html.DisplayNameFor(model => model.Count)
 			</th>
-			<th class="th-sm">
+			<th>
 				@Html.DisplayNameFor(model => model.Price)
 			</th>
-			<th class="th-sm">
+			<th>
 				@Html.DisplayNameFor(model => model.Margin)
 			</th>
-			<th>
+			<th class="th-lg">
 				@Html.DisplayNameFor(model => model.TotalPriceWithMargin)
 			</th>
-			<th class="text-right">
+			<th>
 				@Html.DisplayNameFor(model => model.Category)
 			</th>
 			<th>
@@ -53,7 +53,7 @@
 				<td>
 					@Html.DisplayFor(modelItem => item.TotalPriceWithMargin) zł
 				</td>
-				<td class="text-right">
+				<td>
 					@Html.DisplayFor(modelItem => item.Category)
 				</td>
 				<td>
