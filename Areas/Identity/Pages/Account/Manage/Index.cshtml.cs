@@ -9,17 +9,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Sklepix.Data.Entities;
 
 namespace Sklepix.Areas.Identity.Pages.Account.Manage
 {
 	public class IndexModel : PageModel
 	{
-		private readonly UserManager<IdentityUser> _userManager;
-		private readonly SignInManager<IdentityUser> _signInManager;
+		private readonly UserManager<UserEntity> _userManager;
+		private readonly SignInManager<UserEntity> _signInManager;
 
 		public IndexModel(
-			UserManager<IdentityUser> userManager,
-			SignInManager<IdentityUser> signInManager)
+			UserManager<UserEntity> userManager,
+			SignInManager<UserEntity> signInManager)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
@@ -64,8 +65,8 @@ namespace Sklepix.Areas.Identity.Pages.Account.Manage
 
 		private async Task LoadAsync(IdentityUser user)
 		{
-			var userName = await _userManager.GetUserNameAsync(user);
-			var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+			var userName = await _userManager.GetUserNameAsync((UserEntity)user);
+			var phoneNumber = await _userManager.GetPhoneNumberAsync((UserEntity)user);
 
 			Username = userName;
 

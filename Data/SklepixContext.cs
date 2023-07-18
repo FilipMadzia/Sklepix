@@ -5,15 +5,13 @@ using Sklepix.Data.Seeds;
 
 namespace Sklepix.Data
 {
-	public class SklepixContext : IdentityDbContext
+	public class SklepixContext : IdentityDbContext<UserEntity>
 	{
 		public DbSet<ProductEntity> ProductEntity { get; set; } = default!;
-
 		public DbSet<CategoryEntity>? CategoryEntity { get; set; }
-
 		public DbSet<AisleEntity>? AisleEntity { get; set; }
-
 		public DbSet<ShelfEntity>? ShelfEntity { get; set; }
+		public DbSet<UserEntity>? UserEntity { get; set; }
 
 		public SklepixContext(DbContextOptions<SklepixContext> options) : base(options)
 		{

@@ -2,12 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Sklepix.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SklepixContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("SklepixContext") ?? throw new InvalidOperationException("Connection string 'SklepixContext' not found.")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<UserEntity>(options => options.SignIn.RequireConfirmedAccount = false)
 	.AddEntityFrameworkStores<SklepixContext>();
 
 builder.Services.AddControllersWithViews();
