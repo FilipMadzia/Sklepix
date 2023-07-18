@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
@@ -6,6 +7,7 @@ using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
+	[Authorize]
 	public class AislesController : Controller
 	{
 		private readonly AisleRepository _aisleRepository;

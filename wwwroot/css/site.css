@@ -44,3 +44,7 @@ body {
 .th-lg {
 	width: 180px;
 }
+
+.disabled {
+	cursor: not-allowed;
+}

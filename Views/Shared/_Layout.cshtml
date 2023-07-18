@@ -19,22 +19,46 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Produkty</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Aisles" asp-action="Index">Alejki</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Shelves" asp-action="Index">Półki</a>
-						</li>
-					</ul>
-					<partial name="_LoginPartial" />
-				</div>
+					@if(User.Identity.IsAuthenticated)
+					{
+						<ul class="navbar-nav flex-grow-1">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Produkty</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Kategorie</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Aisles" asp-action="Index">Alejki</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Shelves" asp-action="Index">Półki</a>
+							</li>
+						</ul>
+					}
+					else
+					{
+						<ul class="navbar-nav flex-grow-1">
+							<div class="navbar-nav disabled">
+								<li class="nav-item">
+									<a class="nav-link btn disabled">Produkty</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn disabled">Kategorie</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn disabled">Alejki</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link btn disabled">Półki</a>
+								</li>
+							</div>
+
+							<li class="nav-link text-danger"><b>Nie jesteś obecnie zalogowany!</b></li>
+						</ul>
+					}
+				<partial name="_LoginPartial" />
+			</div>
 			</div>
 		</nav>
 	</header>

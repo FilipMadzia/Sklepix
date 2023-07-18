@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
@@ -7,6 +8,7 @@ using System.Drawing.Printing;
 
 namespace Sklepix.Controllers
 {
+	[Authorize]
 	public class ProductsController : Controller
 	{
 		private readonly ProductRepository _productRepository;
