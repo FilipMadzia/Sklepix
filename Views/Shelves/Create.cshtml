@@ -26,11 +26,11 @@
 			<div class="form-group">
 				<label asp-for="AisleId" class="control-label"></label>
 				<select asp-for="AisleId" class="form-select">
-					@if((aisles != null ? aisles.Count : 0) == 0)
+					@if(aisles.Count == 0)
 					{
 						<option>Nie znaleziono żadnych alejek</option>
 					}
-					@foreach(AisleEntity aisle in aisles != null ? aisles : new List<AisleEntity>())
+					@foreach(AisleEntity aisle in aisles)
 					{
 						<option value="@aisle.Id">@aisle.Name</option>
 					}

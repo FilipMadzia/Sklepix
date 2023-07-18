@@ -83,6 +83,9 @@ namespace Sklepix.Controllers
 				_shelfRepository.Save();
 				return RedirectToAction(nameof(Index));
 			}
+
+			shelfVm.Aisles = _aisleRepository.GetAisles();
+
 			return View(shelfVm);
 		}
 
@@ -147,6 +150,8 @@ namespace Sklepix.Controllers
 				}
 				return RedirectToAction(nameof(Details), new { id = id });
 			}
+
+			shelfVm.Aisles = _aisleRepository.GetAisles();
 
 			return View(shelfVm);
 		}
