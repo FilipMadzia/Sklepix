@@ -15,7 +15,15 @@ namespace Sklepix
 			builder.Services.AddDbContext<SklepixContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("SklepixContext") ?? throw new InvalidOperationException("Connection string 'SklepixContext' not found.")));
 
-			builder.Services.AddDefaultIdentity<UserEntity>(options => options.SignIn.RequireConfirmedAccount = false)
+			builder.Services.AddDefaultIdentity<UserEntity>(options =>
+			{
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+				options.Password.RequiredLength = 4;
+				options.Password.RequiredUniqueChars = 0;
+				options.Password.RequireDigit = false;
+				options.SignIn.RequireConfirmedAccount = false;
+			})
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<SklepixContext>();
 
@@ -49,6 +57,8 @@ namespace Sklepix
 
 			// seedowanie roli administrator i pracownik
 			await RoleSeeder.Seed(app);
+			// seedowanie konta administratora (admin@admin, admin)
+			await UserSeeder.Seed(app);
 
 			app.Run();
 		}

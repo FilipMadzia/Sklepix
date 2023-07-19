@@ -30,8 +30,8 @@ namespace Sklepix.Areas.Identity.Pages.Account
 		public class InputModel
 		{
 			[Required]
-			[EmailAddress]
-			public string Email { get; set; }
+			[Display(Name = "Nazwa użytkownika")]
+			public string UserName { get; set; }
 			[Required]
 			[DataType(DataType.Password)]
 			public string Password { get; set; }
@@ -61,7 +61,7 @@ namespace Sklepix.Areas.Identity.Pages.Account
 
 			if(ModelState.IsValid)
 			{
-				var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, false);
+				var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
 
 				if(result.Succeeded)
 				{

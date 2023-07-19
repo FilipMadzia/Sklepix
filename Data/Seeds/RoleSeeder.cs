@@ -6,7 +6,7 @@ namespace Sklepix.Data.Seeds
 	{
 		public static async Task Seed(WebApplication app)
 		{
-			using(var scope = app.Services.CreateScope())
+			using(IServiceScope scope = app.Services.CreateScope())
 			{
 				RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 				string[] roles = new string[] { "Administrator", "Pracownik" };
