@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Sklepix.Data.Entities;
 
 namespace Sklepix.Areas.Identity.Pages.Account
 {
+	[Authorize(Roles = "Admin")]
 	public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<UserEntity> _signInManager;
@@ -44,6 +46,9 @@ namespace Sklepix.Areas.Identity.Pages.Account
 		public class InputModel
 		{
 			[Required]
+			[Display(Name = "Imię")]
+			public string Username { get; set; }
+			[Required]
 			[EmailAddress]
 			[Display(Name = "Email")]
 			public string Email { get; set; }
@@ -73,7 +78,7 @@ namespace Sklepix.Areas.Identity.Pages.Account
 			{
 				var user = CreateUser();
 
-				await _userStore.SetUserNameAsync((UserEntity)user, Input.Email, CancellationToken.None);
+				await _userStore.SetUserNameAsync((UserEntity)user, Input.Username, CancellationToken.None);
 				await _emailStore.SetEmailAsync((UserEntity)user, Input.Email, CancellationToken.None);
 				var result = await _userManager.CreateAsync((UserEntity)user, Input.Password);
 

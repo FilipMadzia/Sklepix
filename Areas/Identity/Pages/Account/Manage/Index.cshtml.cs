@@ -31,7 +31,7 @@ namespace Sklepix.Areas.Identity.Pages.Account.Manage
 		///     directly from your code. This API may change or be removed in future releases.
 		/// </summary>
 
-		[Display(Name = "Email")]
+		[Display(Name = "Imię")]
 		public string Username { get; set; }
 
 		/// <summary>
