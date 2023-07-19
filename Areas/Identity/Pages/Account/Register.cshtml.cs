@@ -14,7 +14,7 @@ using Sklepix.Data.Entities;
 
 namespace Sklepix.Areas.Identity.Pages.Account
 {
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Administrator")]
 	public class RegisterModel : PageModel
 	{
 		private readonly SignInManager<UserEntity> _signInManager;
