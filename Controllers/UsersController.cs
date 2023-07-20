@@ -56,5 +56,42 @@ namespace Sklepix.Controllers
 
 			return View(userVm);
 		}
+
+		public async Task<IActionResult> Delete(string id)
+		{
+			if(id == null)
+			{
+				return NotFound();
+			}
+
+			UserEntity userEntity = await _userManager.FindByIdAsync(id);
+
+			if(userEntity == null)
+			{
+				return NotFound();
+			}
+
+			UserViewModel userVm = new UserViewModel()
+			{
+				UserName = userEntity.UserName,
+				Email = userEntity.Email
+			};
+
+			return View(userVm);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(string id)
+		{
+			UserEntity userEntity = await _userManager.FindByIdAsync(id);
+
+			if(userEntity != null)
+			{
+				await _userManager.DeleteAsync(userEntity);
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }
