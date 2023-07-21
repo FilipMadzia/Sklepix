@@ -4,7 +4,10 @@
 	ViewData["Title"] = "Zarejestruj";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>
+	<a class="btn btn-outline-secondary" asp-controller="Users" asp-action="Index"><img class="icon" src="~/icons/arrow-left.svg" /></a>
+	@ViewData["Title"]
+</h1>
 
 <div class="row">
 	<div class="col-md-4">
@@ -16,7 +19,7 @@
 				<div class="alert alert-success">@TempData["SuccessMessage"]</div>
 			}
 			<div class="form-floating">
-				<input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" />
+				<input asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" autofocus />
 				<label asp-for="Input.Username"></label>
 				<span asp-validation-for="Input.Username" class="text-danger"></span>
 			</div>
