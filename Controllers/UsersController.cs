@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Sklepix.Data;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
 
@@ -9,17 +10,19 @@ namespace Sklepix.Controllers
 	[Authorize(Roles = "Administrator")]
 	public class UsersController : Controller
 	{
+		SklepixContext _context;
 		UserManager<UserEntity> _userManager;
 
-		public UsersController(UserManager<UserEntity> userManager)
+		public UsersController(SklepixContext context, UserManager<UserEntity> userManager)
 		{
+			_context = context;
 			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			List<UserViewModel> userVms = _userManager.Users
-				.Select(i => new UserViewModel()
+			List<UserDetailsViewModel> userVms = _userManager.Users
+				.Select(i => new UserDetailsViewModel()
 				{
 					Id = i.Id,
 					UserName = i.UserName,
@@ -46,7 +49,7 @@ namespace Sklepix.Controllers
 				return NotFound();
 			}
 
-			UserViewModel userVm = new UserViewModel()
+			UserDetailsViewModel userVm = new UserDetailsViewModel()
 			{
 				Id = userEntity.Id,
 				UserName = userEntity.UserName,
@@ -57,6 +60,31 @@ namespace Sklepix.Controllers
 			};
 
 			return View(userVm);
+		}
+
+		public IActionResult Create()
+		{
+			UserCreateViewModel userVm = new UserCreateViewModel();
+			userVm.Roles = _context.Roles.ToList();
+
+			return View(userVm);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(UserCreateViewModel userVm)
+		{
+			UserEntity user = new UserEntity()
+			{
+				UserName = userVm.UserName,
+				Email = userVm.Email,
+				PhoneNumber = userVm.PhoneNumber,
+				CreationTime = DateTime.Now
+			};
+
+			await _userManager.CreateAsync(user, userVm.Password);
+
+			return RedirectToAction(nameof(Index));
 		}
 
 		public async Task<IActionResult> Delete(string id)
@@ -73,7 +101,7 @@ namespace Sklepix.Controllers
 				return NotFound();
 			}
 
-			UserViewModel userVm = new UserViewModel()
+			UserDetailsViewModel userVm = new UserDetailsViewModel()
 			{
 				UserName = userEntity.UserName,
 				Email = userEntity.Email
