@@ -38,6 +38,15 @@
 			@Html.DisplayFor(model => model.PhoneNumber)
 		</dd>
 		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Roles)
+		</dt>
+		<dd class="col-sm-10">
+			@foreach(string role in Model.Roles)
+			{
+				@Html.DisplayFor(roleName => role)
+			}
+		</dd>
+		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.CreationTime)
 		</dt>
 		<dd class="col-sm-10">

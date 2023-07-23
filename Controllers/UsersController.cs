@@ -16,7 +16,7 @@ namespace Sklepix.Controllers
 			_userManager = userManager;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
 			List<UserViewModel> userVms = _userManager.Users
 				.Select(i => new UserViewModel()
@@ -24,7 +24,8 @@ namespace Sklepix.Controllers
 					Id = i.Id,
 					UserName = i.UserName,
 					Email = i.Email,
-					PhoneNumber = i.PhoneNumber
+					PhoneNumber = i.PhoneNumber,
+					Roles = _userManager.GetRolesAsync(i).Result.ToList()
 				})
 				.ToList();
 
@@ -51,7 +52,8 @@ namespace Sklepix.Controllers
 				UserName = userEntity.UserName,
 				Email = userEntity.Email,
 				PhoneNumber = userEntity.PhoneNumber,
-				CreationTime = userEntity.CreationTime
+				CreationTime = userEntity.CreationTime,
+				Roles = _userManager.GetRolesAsync(userEntity).Result.ToList()
 			};
 
 			return View(userVm);

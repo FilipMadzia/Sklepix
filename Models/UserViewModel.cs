@@ -13,5 +13,7 @@ namespace Sklepix.Models
 		public string? Email { get; set; }
 		[DisplayName("Nr telefonu")]
 		public string? PhoneNumber { get; set; }
+		[DisplayName("Uprawnienia")]
+		public List<string>? Roles { get; set; }
 	}
 }

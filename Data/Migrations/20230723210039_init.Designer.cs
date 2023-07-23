@@ -12,7 +12,7 @@ using Sklepix.Data;
 namespace Sklepix.Data.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    [Migration("20230719203532_init")]
+    [Migration("20230723210039_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
