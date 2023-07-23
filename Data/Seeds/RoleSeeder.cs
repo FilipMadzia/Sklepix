@@ -12,10 +12,10 @@ namespace Sklepix.Data.Seeds
 				string[] roles = new string[]
 				{
 					"Administrator",
-					"Alejki.C", "Alejki.R", "Alejki.U", "Alejki.D",
-					"Kategorie.C", "Kategorie.R", "Kategorie.U", "Kategorie.D",
-					"Produkty.C", "Produkty.R", "Produkty.U", "Produkty.D",
-					"Polki.C", "Polki.R", "Polki.U", "Polki.D"
+					"Alejki - dodawanie", "Alejki - wyswietlanie", "Alejki - zmienianie", "Alejki - usuwanie",
+					"Kategorie - dodawanie", "Kategorie - wyswietlanie", "Kategorie - zmienianie", "Kategorie - usuwanie",
+					"Produkty - dodawanie", "Produkty - wyswietlanie", "Produkty - zmienianie", "Produkty - usuwanie",
+					"Polki - dodawanie", "Polki - wyswietlanie", "Polki - zmienianie", "Polki - usuwanie"
 				};
 
 				foreach(string role in roles)
