@@ -7,7 +7,6 @@ using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	[Authorize]
 	public class ShelvesController : Controller
 	{
 		private readonly ShelfRepository _shelfRepository;
@@ -21,6 +20,7 @@ namespace Sklepix.Controllers
 			_productRepository = productRepository;
 		}
 
+		[Authorize(Roles = "Administrator, Polki - wyswietlanie")]
 		public IActionResult Index()
 		{
 			List<ShelfDetailsViewModel> shelfVms = _shelfRepository.GetShelves()
@@ -35,6 +35,7 @@ namespace Sklepix.Controllers
 			return View(shelfVms);
 		}
 
+		[Authorize(Roles = "Administrator, Polki - wyswietlanie")]
 		public IActionResult Details(int id = -1)
 		{
 			if(id == -1 || _shelfRepository == null)
@@ -59,6 +60,7 @@ namespace Sklepix.Controllers
 			return View(shelfVm);
 		}
 
+		[Authorize(Roles = "Administrator, Polki - dodawanie")]
 		public IActionResult Create()
 		{
 			ShelfCreateViewModel shelfVm = new ShelfCreateViewModel()
@@ -91,6 +93,7 @@ namespace Sklepix.Controllers
 			return View(shelfVm);
 		}
 
+		[Authorize(Roles = "Administrator, Polki - zmienianie")]
 		public IActionResult Edit(int id = -1)
 		{
 			if(id == -1 || _shelfRepository == null)
@@ -158,6 +161,7 @@ namespace Sklepix.Controllers
 			return View(shelfVm);
 		}
 
+		[Authorize(Roles = "Administrator, Polki - usuwanie")]
 		public IActionResult Delete(int id = -1)
 		{
 			if(id == -1 || _shelfRepository == null)

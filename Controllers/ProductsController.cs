@@ -8,7 +8,6 @@ using System.Drawing.Printing;
 
 namespace Sklepix.Controllers
 {
-	[Authorize]
 	public class ProductsController : Controller
 	{
 		private readonly ProductRepository _productRepository;
@@ -24,6 +23,7 @@ namespace Sklepix.Controllers
 			_aisleRepository = aisleRepository;
 		}
 
+		[Authorize(Roles = "Administrator, Produkty - wyswietlanie")]
 		public IActionResult Index()
 		{
 			List<ProductDetailsViewModel> productVms = _productRepository.GetProducts()
@@ -44,6 +44,7 @@ namespace Sklepix.Controllers
 			return View(productVms);
 		}
 
+		[Authorize(Roles = "Administrator, Produkty - wyswietlanie")]
 		public IActionResult Details(int id = -1)
 		{
 			if(id == -1 || _productRepository == null)
@@ -74,6 +75,7 @@ namespace Sklepix.Controllers
 			return View(productVm);
 		}
 
+		[Authorize(Roles = "Administrator, Produkty - dodawanie")]
 		public IActionResult Create()
 		{
 			ProductCreateViewModel productVm = new ProductCreateViewModel()
@@ -119,6 +121,7 @@ namespace Sklepix.Controllers
 			return View(productVm);
 		}
 
+		[Authorize(Roles = "Administrator, Produkty - zmienianie")]
 		public IActionResult Edit(int id = -1)
 		{
 			if(id == -1 || _productRepository == null)
@@ -198,6 +201,7 @@ namespace Sklepix.Controllers
 			return View(productVm);
 		}
 
+		[Authorize(Roles = "Administrator, Produkty - usuwanie")]
 		public IActionResult Delete(int id = -1)
 		{
 			if(id == -1 || _productRepository == null)

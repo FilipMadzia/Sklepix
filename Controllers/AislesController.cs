@@ -7,7 +7,6 @@ using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	[Authorize]
 	public class AislesController : Controller
 	{
 		private readonly AisleRepository _aisleRepository;
@@ -19,6 +18,7 @@ namespace Sklepix.Controllers
 			_shelfRepository = shelfRepository;
 		}
 
+		[Authorize(Roles = "Administrator, Alejki - wyswietlanie")]
 		public IActionResult Index()
 		{
 			List<AisleDetailsViewModel> aisleVms = _aisleRepository.GetAisles()
@@ -32,6 +32,7 @@ namespace Sklepix.Controllers
 			return View(aisleVms);
 		}
 
+		[Authorize(Roles = "Administrator, Alejki - wyswietlanie")]
 		public IActionResult Details(int id = -1)
 		{
 			if(id == -1 || _aisleRepository == null)
@@ -55,6 +56,7 @@ namespace Sklepix.Controllers
 			return View(aisleVm);
 		}
 
+		[Authorize(Roles = "Administrator, Alejki - dodawanie")]
 		public IActionResult Create()
 		{
 			return View(new AisleCreateViewModel());
@@ -79,6 +81,7 @@ namespace Sklepix.Controllers
 			return View(aisleVm);
 		}
 
+		[Authorize(Roles = "Administrator, Alejki - zmienianie")]
 		public IActionResult Edit(int id = -1)
 		{
 			if(id == -1 || _aisleRepository == null)
@@ -140,6 +143,7 @@ namespace Sklepix.Controllers
 			return View(aisleVm);
 		}
 
+		[Authorize(Roles = "Administrator, Alejki - usuwanie")]
 		public IActionResult Delete(int id = -1)
 		{
 			if(id == -1 || _aisleRepository == null)

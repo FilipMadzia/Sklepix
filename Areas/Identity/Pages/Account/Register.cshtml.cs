@@ -76,18 +76,23 @@ namespace Sklepix.Areas.Identity.Pages.Account
 
 			if(ModelState.IsValid)
 			{
-				var user = CreateUser();
+				var user = (UserEntity)CreateUser();
 
-				await _userStore.SetUserNameAsync((UserEntity)user, Input.Username, CancellationToken.None);
-				await _emailStore.SetEmailAsync((UserEntity)user, Input.Email, CancellationToken.None);
-				var result = await _userManager.CreateAsync((UserEntity)user, Input.Password);
+				await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
+				await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+				var result = await _userManager.CreateAsync(user, Input.Password);
+
+				await _userManager.AddToRoleAsync(user, "Alejki - wyswietlanie");
+				await _userManager.AddToRoleAsync(user, "Kategorie - wyswietlanie");
+				await _userManager.AddToRoleAsync(user, "Produkty - wyswietlanie");
+				await _userManager.AddToRoleAsync(user, "Polki - wyswietlanie");
 
 				if(result.Succeeded)
 				{
 					_logger.LogInformation("User created a new account with password.");
 
-					var userId = await _userManager.GetUserIdAsync((UserEntity)user);
-					var code = await _userManager.GenerateEmailConfirmationTokenAsync((UserEntity)user);
+					var userId = await _userManager.GetUserIdAsync(user);
+					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 					var callbackUrl = Url.Page(
 						"/Account/ConfirmEmail",

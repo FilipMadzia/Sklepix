@@ -7,7 +7,6 @@ using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	[Authorize]
 	public class CategoriesController : Controller
 	{
 		private readonly CategoryRepository _categoryRepository;
@@ -19,6 +18,7 @@ namespace Sklepix.Controllers
 			_productRepository = productRepository;
 		}
 
+		[Authorize(Roles = "Administrator, Kategorie - wyswietlanie")]
 		public IActionResult Index()
 		{
 			List<CategoryDetailsViewModel> categoryVms = _categoryRepository.GetCategories()
@@ -32,6 +32,7 @@ namespace Sklepix.Controllers
 			return View(categoryVms);
 		}
 
+		[Authorize(Roles = "Administrator, Kategorie - wyswietlanie")]
 		public IActionResult Details(int id = -1)
 		{
 			if(id == -1 || _categoryRepository == null)
@@ -55,6 +56,7 @@ namespace Sklepix.Controllers
 			return View(categoryVm);
 		}
 
+		[Authorize(Roles = "Administrator, Kategorie - dodawanie")]
 		public IActionResult Create()
 		{
 			return View(new CategoryCreateViewModel());
@@ -80,6 +82,7 @@ namespace Sklepix.Controllers
 			return View(categoryVm);
 		}
 
+		[Authorize(Roles = "Administrator, Kategorie - zmienianie")]
 		public IActionResult Edit(int id = -1)
 		{
 			if(id == -1 || _categoryRepository == null)
@@ -140,8 +143,9 @@ namespace Sklepix.Controllers
 			}
 
 			return View(categoryVm);
-			}
+		}
 
+		[Authorize(Roles = "Administrator, Kategorie - usuwanie")]
 		public IActionResult Delete(int id = -1)
 		{
 			if(id == -1 || _categoryRepository == null)

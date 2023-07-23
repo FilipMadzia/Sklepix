@@ -19,9 +19,6 @@
 			<th class="th-lg">
 				@Html.DisplayNameFor(model => model.PhoneNumber)
 			</th>
-			<th class="th-lg">
-				@Html.DisplayNameFor(model => model.Roles)
-			</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -37,12 +34,6 @@
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.PhoneNumber)
-				</td>
-				<td>
-					@foreach(string role in item.Roles)
-					{
-						@Html.DisplayFor(roleName => role)
-					}
 				</td>
 				<td class="text-right">
 					<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
