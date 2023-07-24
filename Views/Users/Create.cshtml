@@ -38,10 +38,11 @@
 			</div>
 			@foreach(IdentityRole role in Model.Roles)
 			{
-				<input id="@role.Name" class="form-checkbox" type="checkbox" value="@role.Name" />
+				<input id="@role.Name" class="form-checkbox roles-names" type="checkbox" />
 				<label for="@role.Name">@role.Name</label>
 				<br />
 			}
+			<input type="hidden" id="roles" />
 			<br />
 			<div class="form-group">
 				<input type="submit" value="Dodaj" class="btn btn-primary" />
@@ -49,3 +50,28 @@
 		</form>
 	</div>
 </div>
+
+<script>
+	const rolesInput = document.querySelector("#roles");
+	const checkedRoles = document.querySelectorAll(".roles-names");
+
+	let rolesString = "";
+
+	for(let i = 0; i < checkedRoles.length; i++)
+	{
+		checkedRoles[i].addEventListener("input", () => 
+		{
+			rolesString = "";
+
+			for(let j = 0; j < checkedRoles.length; j++)
+			{
+				if(checkedRoles[j].checked)
+				{
+					rolesString += checkedRoles[j].id + ",";
+				}
+			}
+
+			rolesInput.value = rolesString;
+		});
+	}
+</script>
