@@ -21,6 +21,7 @@ namespace Sklepix.Models
 		[DisplayName("Hasło")]
 		public string? Password { get; set; }
 		[DisplayName("Uprawnienia")]
-		public List<IdentityRole> Roles { get; set; }
+		public List<IdentityRole>? Roles { get; set; }
+		public string? RolesString { get; set; }
 	}
 }

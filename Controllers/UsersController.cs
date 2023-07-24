@@ -82,16 +82,19 @@ namespace Sklepix.Controllers
 				CreationTime = DateTime.Now
 			};
 
-			//List<IdentityRole> roles = userVm.Roles;
-			//List<string> rolesString = new();
-
-			//foreach(IdentityRole role in roles)
-			//{
-			//	rolesString.Add(role.Name);
-			//}
-
 			await _userManager.CreateAsync(user, userVm.Password);
-			// await _userManager.AddToRolesAsync(user, rolesString);
+
+			string rolesString = userVm.RolesString;
+
+			if(rolesString != null)
+			{
+				List<string> roles = rolesString.Split(',').ToList();
+
+				foreach(string role in roles)
+				{
+					await _userManager.AddToRoleAsync(user, role);
+				}
+			}
 
 			return RedirectToAction(nameof(Index));
 		}
