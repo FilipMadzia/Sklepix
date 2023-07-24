@@ -7,7 +7,7 @@ namespace Sklepix.Models
 		public string? Id { get; set; }
 		[DisplayName("Data dodania")]
 		public DateTime CreationTime { get; set; }
-		[DisplayName("Imię")]
+		[DisplayName("Nazwa użytkownika")]
 		public string? UserName { get; set; }
 		[DisplayName("Email")]
 		public string? Email { get; set; }

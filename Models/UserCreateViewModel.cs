@@ -9,7 +9,7 @@ namespace Sklepix.Models
 		public string? Id { get; set; }
 		public DateTime CreationTime { get; set; }
 		[Required]
-		[DisplayName("Imię")]
+		[DisplayName("Nazwa użytkownika")]
 		public string? UserName { get; set; }
 		[Required]
 		[DisplayName("Email")]

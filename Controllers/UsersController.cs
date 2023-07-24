@@ -65,7 +65,7 @@ namespace Sklepix.Controllers
 		public IActionResult Create()
 		{
 			UserCreateViewModel userVm = new UserCreateViewModel();
-			userVm.Roles = _context.Roles.ToList();
+			userVm.Roles = _context.Roles.OrderBy(x => x.Name).ToList();
 
 			return View(userVm);
 		}
@@ -82,7 +82,16 @@ namespace Sklepix.Controllers
 				CreationTime = DateTime.Now
 			};
 
+			//List<IdentityRole> roles = userVm.Roles;
+			//List<string> rolesString = new();
+
+			//foreach(IdentityRole role in roles)
+			//{
+			//	rolesString.Add(role.Name);
+			//}
+
 			await _userManager.CreateAsync(user, userVm.Password);
+			// await _userManager.AddToRolesAsync(user, rolesString);
 
 			return RedirectToAction(nameof(Index));
 		}
