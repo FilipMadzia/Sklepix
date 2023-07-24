@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
@@ -92,11 +94,63 @@ namespace Sklepix.Controllers
 
 				foreach(string role in roles)
 				{
-					await _userManager.AddToRoleAsync(user, role);
+					if(role != null && role != "")
+					{ 
+						await _userManager.AddToRoleAsync(user, role);
+					}
 				}
 			}
 
 			return RedirectToAction(nameof(Index));
+		}
+
+		public async Task<IActionResult> Edit(string id)
+		{
+			UserEntity userEntity = await _userManager.FindByIdAsync(id);
+			UserCreateViewModel userVm = new UserCreateViewModel()
+			{
+				Id = userEntity.Id,
+				UserName = userEntity.UserName,
+				Email = userEntity.Email,
+				PhoneNumber = userEntity.PhoneNumber
+			};
+
+			userVm.Roles = _context.Roles.OrderBy(x => x.Name).ToList();
+
+			return View(userVm);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(string id, UserCreateViewModel userVm)
+		{
+			UserEntity userEntity = await _userManager.FindByIdAsync(id);
+			userEntity.UserName = userVm.UserName;
+			userEntity.Email = userVm.Email;
+			userEntity.PhoneNumber = userVm.PhoneNumber;
+
+			await _userManager.UpdateAsync(userEntity);
+
+			List<string> allRolesNames = _userManager.GetRolesAsync(userEntity).Result.ToList();
+
+			await _userManager.RemoveFromRolesAsync(userEntity, allRolesNames);
+
+			string rolesString = userVm.RolesString;
+
+			if(rolesString != null)
+			{
+				List<string> roles = rolesString.Split(',').ToList();
+
+				foreach(string role in roles)
+				{
+					if(role != null && role != "")
+					{
+						await _userManager.AddToRoleAsync(userEntity, role);
+					}
+				}
+			}
+
+			return RedirectToAction(nameof(Details), new { id = id });
 		}
 
 		public async Task<IActionResult> Delete(string id)
