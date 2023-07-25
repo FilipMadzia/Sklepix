@@ -12,7 +12,7 @@ using Sklepix.Data;
 namespace Sklepix.Data.Migrations
 {
     [DbContext(typeof(SklepixContext))]
-    [Migration("20230725194545_init")]
+    [Migration("20230725203144_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,6 +237,33 @@ namespace Sklepix.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Sklepix.Data.Entities.FinishedTaskEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("FinishedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinishedSuccessfully")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("FinishedTaskEntity");
+                });
+
             modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -291,6 +318,39 @@ namespace Sklepix.Data.Migrations
                     b.HasIndex("AisleId");
 
                     b.ToTable("ShelfEntity");
+                });
+
+            modelBuilder.Entity("Sklepix.Data.Entities.TaskEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TaskEntity");
                 });
 
             modelBuilder.Entity("Sklepix.Data.Entities.UserEntity", b =>
@@ -427,6 +487,15 @@ namespace Sklepix.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Sklepix.Data.Entities.FinishedTaskEntity", b =>
+                {
+                    b.HasOne("Sklepix.Data.Entities.TaskEntity", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskId");
+
+                    b.Navigation("Task");
+                });
+
             modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>
                 {
                     b.HasOne("Sklepix.Data.Entities.CategoryEntity", "Category")
@@ -449,6 +518,15 @@ namespace Sklepix.Data.Migrations
                         .HasForeignKey("AisleId");
 
                     b.Navigation("Aisle");
+                });
+
+            modelBuilder.Entity("Sklepix.Data.Entities.TaskEntity", b =>
+                {
+                    b.HasOne("Sklepix.Data.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

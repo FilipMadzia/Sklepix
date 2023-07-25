@@ -190,6 +190,29 @@ namespace Sklepix.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TaskEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskEntity_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShelfEntity",
                 columns: table => new
                 {
@@ -205,6 +228,27 @@ namespace Sklepix.Data.Migrations
                         name: "FK_ShelfEntity_AisleEntity_AisleId",
                         column: x => x.AisleId,
                         principalTable: "AisleEntity",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinishedTaskEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskId = table.Column<int>(type: "int", nullable: true),
+                    FinishedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsFinishedSuccessfully = table.Column<bool>(type: "bit", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinishedTaskEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FinishedTaskEntity_TaskEntity_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "TaskEntity",
                         principalColumn: "Id");
                 });
 
@@ -302,6 +346,11 @@ namespace Sklepix.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FinishedTaskEntity_TaskId",
+                table: "FinishedTaskEntity",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductEntity_CategoryId",
                 table: "ProductEntity",
                 column: "CategoryId");
@@ -315,6 +364,11 @@ namespace Sklepix.Data.Migrations
                 name: "IX_ShelfEntity_AisleId",
                 table: "ShelfEntity",
                 column: "AisleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskEntity_UserId",
+                table: "TaskEntity",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -335,10 +389,16 @@ namespace Sklepix.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "FinishedTaskEntity");
+
+            migrationBuilder.DropTable(
                 name: "ProductEntity");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "TaskEntity");
 
             migrationBuilder.DropTable(
                 name: "CategoryEntity");
