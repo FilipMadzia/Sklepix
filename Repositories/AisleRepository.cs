@@ -16,12 +16,14 @@ namespace Sklepix.Repositories
 		public List<AisleEntity> GetAisles()
 		{
 			return _context.AisleEntity
+				.Include(i => i.User)
 				.ToList();
 		}
 
 		public AisleEntity GetAisleById(int id)
 		{
 			return _context.AisleEntity
+				.Include(i => i.User)
 				.First(x => x.Id == id);
 		}
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Sklepix.Data.Entities;
+using System.ComponentModel;
 
 namespace Sklepix.Models
 {
@@ -7,5 +8,7 @@ namespace Sklepix.Models
 		public int Id { get; set; }
 		[DisplayName("Nazwa")]
 		public string? Name { get; set; }
+		[DisplayName("Pracownik")]
+		public UserEntity? User { get; set; }
 	}
 }

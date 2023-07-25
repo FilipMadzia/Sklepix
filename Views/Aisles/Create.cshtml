@@ -1,8 +1,10 @@
-﻿@model AisleCreateViewModel
+﻿@using Sklepix.Data.Entities;
+@model AisleCreateViewModel
 
 @{
 	ViewData["Title"] = "Dodaj alejkę";
 	Layout = "~/Views/Shared/_Layout.cshtml";
+	List<UserEntity> users = Model.Users;
 }
 
 <h1>
@@ -19,6 +21,20 @@
 				<label asp-for="Name" class="control-label"></label>
 				<input asp-for="Name" class="form-control" autofocus />
 				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<hr />
+			<div class="form-group">
+				<label asp-for="UserId" class="control-label"></label>
+				<select asp-for="UserId" class="form-select" required>
+					@if(users.Count == 0)
+					{
+						<option>Nie znaleziono żadnych użytkowników</option>
+					}
+					@foreach(UserEntity user in users)
+					{
+						<option value="@user.Id">@user.FirstName @user.LastName</option>
+					}
+				</select>
 			</div>
 			<br />
 			<div class="form-group">

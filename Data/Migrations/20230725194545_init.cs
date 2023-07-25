@@ -10,19 +10,6 @@ namespace Sklepix.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AisleEntity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AisleEntity", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -78,25 +65,6 @@ namespace Sklepix.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShelfEntity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<int>(type: "int", nullable: false),
-                    AisleId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShelfEntity", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ShelfEntity_AisleEntity_AisleId",
-                        column: x => x.AisleId,
-                        principalTable: "AisleEntity",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -115,6 +83,25 @@ namespace Sklepix.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AisleEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AisleEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AisleEntity_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -203,6 +190,25 @@ namespace Sklepix.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShelfEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    AisleId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShelfEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShelfEntity_AisleEntity_AisleId",
+                        column: x => x.AisleId,
+                        principalTable: "AisleEntity",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductEntity",
                 columns: table => new
                 {
@@ -232,12 +238,12 @@ namespace Sklepix.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "AisleEntity",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Name", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Warzywa i owoce" },
-                    { 2, "Napoje" },
-                    { 3, "Pieczywo" }
+                    { 1, "Warzywa i owoce", null },
+                    { 2, "Napoje", null },
+                    { 3, "Pieczywo", null }
                 });
 
             migrationBuilder.InsertData(
@@ -250,6 +256,11 @@ namespace Sklepix.Data.Migrations
                     { 3, "Napoje" },
                     { 4, "Pieczywo" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AisleEntity_UserId",
+                table: "AisleEntity",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -330,9 +341,6 @@ namespace Sklepix.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "CategoryEntity");
 
             migrationBuilder.DropTable(
@@ -340,6 +348,9 @@ namespace Sklepix.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AisleEntity");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

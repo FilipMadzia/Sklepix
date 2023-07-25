@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
@@ -11,11 +12,13 @@ namespace Sklepix.Controllers
 	{
 		private readonly AisleRepository _aisleRepository;
 		private readonly ShelfRepository _shelfRepository;
+		private readonly UserManager<UserEntity> _userManager;
 
-		public AislesController(AisleRepository aisleRepository, ShelfRepository shelfRepository)
+		public AislesController(AisleRepository aisleRepository, ShelfRepository shelfRepository, UserManager<UserEntity> userManager)
 		{
 			_aisleRepository = aisleRepository;
 			_shelfRepository = shelfRepository;
+			_userManager = userManager;
 		}
 
 		[Authorize(Roles = "Administrator, Alejki - wyswietlanie")]
@@ -25,7 +28,8 @@ namespace Sklepix.Controllers
 				.Select(i => new AisleDetailsViewModel()
 				{
 					Id = i.Id,
-					Name = i.Name
+					Name = i.Name,
+					User = i.User != null ? _userManager.FindByIdAsync(i.User.Id).Result : new UserEntity()
 				})
 				.ToList();
 
@@ -50,7 +54,8 @@ namespace Sklepix.Controllers
 			AisleDetailsViewModel aisleVm = new AisleDetailsViewModel()
 			{
 				Id = aisleEntity.Id,
-				Name = aisleEntity.Name
+				Name = aisleEntity.Name,
+				User = aisleEntity.User != null ? _userManager.FindByIdAsync(aisleEntity.User.Id).Result : new UserEntity()
 			};
 
 			return View(aisleVm);
@@ -59,7 +64,11 @@ namespace Sklepix.Controllers
 		[Authorize(Roles = "Administrator, Alejki - dodawanie")]
 		public IActionResult Create()
 		{
-			return View(new AisleCreateViewModel());
+			return View(new AisleCreateViewModel()
+			{
+				Users = _userManager.Users.ToList()
+			}
+			);
 		}
 
 		[HttpPost]
@@ -69,7 +78,8 @@ namespace Sklepix.Controllers
 			AisleEntity aisleEntity = new AisleEntity()
 			{
 				Id = aisleVm.Id,
-				Name = aisleVm.Name
+				Name = aisleVm.Name,
+				User = _userManager.FindByIdAsync(aisleVm.UserId).Result
 			};
 
 			if(ModelState.IsValid)
@@ -99,7 +109,9 @@ namespace Sklepix.Controllers
 			AisleCreateViewModel aisleVm = new AisleCreateViewModel()
 			{
 				Id = aisleEntity.Id,
-				Name = aisleEntity.Name
+				Name = aisleEntity.Name,
+				UserId = aisleEntity.User != null ? aisleEntity.User.Id : "",
+				Users = _userManager.Users.ToList()
 			};
 
 			return View(aisleVm);
@@ -112,7 +124,8 @@ namespace Sklepix.Controllers
 			AisleEntity aisleEntity = new AisleEntity()
 			{
 				Id = aisleVm.Id,
-				Name = aisleVm.Name
+				Name = aisleVm.Name,
+				User = _userManager.FindByIdAsync(aisleVm.UserId).Result
 			};
 
 			if (id != aisleEntity.Id)

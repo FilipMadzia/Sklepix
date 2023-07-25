@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 
 namespace Sklepix.Data.Seeds
@@ -7,22 +8,24 @@ namespace Sklepix.Data.Seeds
 	{
 		public static void Seed(ModelBuilder modelBuilder)
 		{
+			UserManager<UserEntity> userManager;
+
 			modelBuilder.Entity<AisleEntity>().HasData(new List<AisleEntity>()
 			{
 				new AisleEntity()
 				{
 					Id = 1,
-					Name = "Warzywa i owoce",
+					Name = "Warzywa i owoce"
 				},
 				new AisleEntity()
 				{
 					Id = 2,
-					Name = "Napoje",
+					Name = "Napoje"
 				},
 				new AisleEntity()
 				{
 					Id = 3,
-					Name = "Pieczywo",
+					Name = "Pieczywo"
 				}
 			});
 		}
