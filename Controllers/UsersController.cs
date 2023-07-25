@@ -28,6 +28,8 @@ namespace Sklepix.Controllers
 				{
 					Id = i.Id,
 					UserName = i.UserName,
+					FirstName = i.FirstName,
+					LastName = i.LastName,
 					Email = i.Email,
 					PhoneNumber = i.PhoneNumber,
 					Roles = _userManager.GetRolesAsync(i).Result.ToList()
@@ -55,6 +57,8 @@ namespace Sklepix.Controllers
 			{
 				Id = userEntity.Id,
 				UserName = userEntity.UserName,
+				FirstName = userEntity.FirstName,
+				LastName = userEntity.LastName,
 				Email = userEntity.Email,
 				PhoneNumber = userEntity.PhoneNumber,
 				CreationTime = userEntity.CreationTime,
@@ -79,6 +83,8 @@ namespace Sklepix.Controllers
 			UserEntity user = new UserEntity()
 			{
 				UserName = userVm.UserName,
+				FirstName = userVm.FirstName,
+				LastName = userVm.LastName,
 				Email = userVm.Email,
 				PhoneNumber = userVm.PhoneNumber,
 				CreationTime = DateTime.Now
@@ -111,6 +117,8 @@ namespace Sklepix.Controllers
 			{
 				Id = userEntity.Id,
 				UserName = userEntity.UserName,
+				FirstName = userEntity.FirstName,
+				LastName = userEntity.LastName,
 				Email = userEntity.Email,
 				PhoneNumber = userEntity.PhoneNumber
 			};
@@ -126,6 +134,8 @@ namespace Sklepix.Controllers
 		{
 			UserEntity userEntity = await _userManager.FindByIdAsync(id);
 			userEntity.UserName = userVm.UserName;
+			userEntity.FirstName = userVm.FirstName;
+			userEntity.LastName = userVm.LastName;
 			userEntity.Email = userVm.Email;
 			userEntity.PhoneNumber = userVm.PhoneNumber;
 

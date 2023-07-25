@@ -18,7 +18,9 @@ namespace Sklepix.Data.Seeds
 				{
 					UserEntity user = new UserEntity()
 					{
-						UserName = "Administrator",
+						UserName = "administrator",
+						FirstName = "Jacek",
+						LastName = "Kowalski",
 						Email = email,
 						CreationTime = DateTime.Now,
 						EmailConfirmed = true,

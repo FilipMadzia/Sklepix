@@ -12,6 +12,12 @@ namespace Sklepix.Models
 		[DisplayName("Nazwa użytkownika")]
 		public string? UserName { get; set; }
 		[Required]
+		[DisplayName("Imię")]
+		public string? FirstName { get; set; }
+		[Required]
+		[DisplayName("Nazwisko")]
+		public string? LastName { get; set; }
+		[Required]
 		[DisplayName("Email")]
 		public string? Email { get; set; }
 		[Required]

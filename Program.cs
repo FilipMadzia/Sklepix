@@ -23,7 +23,7 @@ namespace Sklepix
 				options.Password.RequiredUniqueChars = 0;
 				options.Password.RequireDigit = false;
 				options.SignIn.RequireConfirmedAccount = false;
-				options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+				options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz.";
 			})
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<SklepixContext>();
