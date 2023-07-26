@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models;
 using Sklepix.Repositories;
-using System.Drawing.Printing;
 
 namespace Sklepix.Controllers
 {

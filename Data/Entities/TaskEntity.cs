@@ -2,12 +2,25 @@
 {
 	public class TaskEntity
 	{
+		public enum PriorityEnum
+		{
+			Low,
+			Medium,
+			High
+		}
+		public enum StatusEnum
+		{
+			Todo,
+			Doing,
+			Finished
+		}
+
 		public int Id { get; set; }
 		public string? Name { get; set; }
 		public string? Description { get; set; }
 		public UserEntity? User { get; set; }
 		public DateTime Deadline { get; set; }
-		public int Priority { get; set; }
-		public int Status { get; set; }
+		public PriorityEnum Priority { get; set; }
+		public StatusEnum Status { get; set; }
 	}
 }

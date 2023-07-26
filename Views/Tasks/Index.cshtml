@@ -1,0 +1,40 @@
+﻿@using Sklepix.Models.Tasks;
+@model IEnumerable<TaskDetailsViewModel>
+
+@{
+	ViewData["Title"] = "Zadania";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"] <a class="btn btn-primary" asp-action="Create">Dodaj zadanie</a></h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th class="th-lg">
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th class="th-lg">
+				@Html.DisplayNameFor(model => model.User)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var item in Model)
+		{
+			<tr class="align-middle row-link" onclick="location.href='@Url.Action("Details", new { Id = item.Id })'">
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.User.FirstName)
+					@Html.DisplayFor(modelItem => item.User.LastName)
+				</td>
+				<td class="text-right">
+					<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
