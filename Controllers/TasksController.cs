@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models.Tasks;
 using Sklepix.Repositories;
@@ -107,86 +108,125 @@ namespace Sklepix.Controllers
 			return View(taskVm);
 		}
 
-		//public async Task<IActionResult> Edit(int? id)
-		//{
-		//	if(id == null || _context.TaskEntity == null)
-		//	{
-		//		return NotFound();
-		//	}
+		public IActionResult Edit(int id = -1)
+		{
+			if(id == -1 || _taskRepository == null)
+			{
+				return NotFound();
+			}
 
-		//	var taskEntity = await _context.TaskEntity.FindAsync(id);
-		//	if(taskEntity == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	return View(taskEntity);
-		//}
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
 
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Deadline,Priority,Status")] TaskEntity taskEntity)
-		//{
-		//	if(id != taskEntity.Id)
-		//	{
-		//		return NotFound();
-		//	}
+			if(taskEntity == null)
+			{
+				return NotFound();
+			}
 
-		//	if(ModelState.IsValid)
-		//	{
-		//		try
-		//		{
-		//			_context.Update(taskEntity);
-		//			await _context.SaveChangesAsync();
-		//		}
-		//		catch(DbUpdateConcurrencyException)
-		//		{
-		//			if(!TaskEntityExists(taskEntity.Id))
-		//			{
-		//				return NotFound();
-		//			}
-		//			else
-		//			{
-		//				throw;
-		//			}
-		//		}
-		//		return RedirectToAction(nameof(Index));
-		//	}
-		//	return View(taskEntity);
-		//}
+			TaskCreateViewModel taskVm = new TaskCreateViewModel()
+			{
+				Id = taskEntity.Id,
+				Name = taskEntity.Name,
+				Description = taskEntity.Description,
+				Users = _userManager.Users.ToList(),
+				UserId = taskEntity.User.Id,
+				Deadline = taskEntity.Deadline,
+				Priority = taskEntity.Priority
+			};
 
-		//public async Task<IActionResult> Delete(int? id)
-		//{
-		//	if(id == null || _context.TaskEntity == null)
-		//	{
-		//		return NotFound();
-		//	}
+			return View(taskVm);
+		}
 
-		//	var taskEntity = await _context.TaskEntity
-		//		.FirstOrDefaultAsync(m => m.Id == id);
-		//	if(taskEntity == null)
-		//	{
-		//		return NotFound();
-		//	}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(int id, TaskCreateViewModel taskVm)
+		{
+			TaskEntity taskEntity = new TaskEntity()
+			{
+				Id = taskVm.Id,
+				Name = taskVm.Name,
+				Description = taskVm.Description,
+				Deadline = taskVm.Deadline,
+				User = _userManager.FindByIdAsync(taskVm.UserId).Result,
+				Priority = taskVm.Priority
+			};
 
-		//	return View(taskEntity);
-		//}
+			if(id != taskEntity.Id)
+			{
+				return NotFound();
+			}
 
-		//[HttpPost, ActionName("Delete")]
-		//[ValidateAntiForgeryToken]
-		//public async Task<IActionResult> DeleteConfirmed(int id)
-		//{
-		//	if(_context.TaskEntity == null)
-		//	{
-		//		return Problem("Entity set 'SklepixContext.TaskEntity'  is null.");
-		//	}
-		//	var taskEntity = await _context.TaskEntity.FindAsync(id);
-		//	if(taskEntity != null)
-		//	{
-		//		_context.TaskEntity.Remove(taskEntity);
-		//	}
+			if(ModelState.IsValid)
+			{
+				try
+				{
+					_taskRepository.UpdateTask(taskEntity);
+					_taskRepository.Save();
+				}
+				catch(DbUpdateConcurrencyException)
+				{
+					if(_taskRepository.GetTaskById(id) == null)
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Details), new { id = id });
+			}
 
-		//	await _context.SaveChangesAsync();
-		//	return RedirectToAction(nameof(Index));
-		//}
+			taskVm.Users = _userManager.Users.ToList();
+
+			return View(taskVm);
+		}
+
+		public IActionResult Delete(int id = -1)
+		{
+			if(id == -1 || _taskRepository == null)
+			{
+				return NotFound();
+			}
+
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
+
+			if(taskEntity == null)
+			{
+				return NotFound();
+			}
+
+			TaskDetailsViewModel taskVm = new TaskDetailsViewModel()
+			{
+				Id = taskEntity.Id,
+				Name = taskEntity.Name,
+				Description = taskEntity.Description,
+				User = taskEntity.User,
+				Deadline = taskEntity.Deadline,
+				Priority = taskEntity.Priority,
+				Status = taskEntity.Status
+			};
+
+			return View(taskVm);
+		}
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeleteConfirmed(int id)
+		{
+			if(_taskRepository == null)
+			{
+				return Problem("Entity set 'SklepixContext.TaskEntity'  is null.");
+			}
+
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
+
+			if(taskEntity != null)
+			{
+				_taskRepository.DeleteTask(id);
+			}
+
+			_taskRepository.Save();
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }

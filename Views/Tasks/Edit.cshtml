@@ -1,55 +1,60 @@
-﻿@model Sklepix.Data.Entities.TaskEntity
+﻿@using Sklepix.Data.Entities;
+@using Sklepix.Models.Tasks;
+@using static Sklepix.Data.Entities.TaskEntity;
+@model TaskCreateViewModel
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Edytuj zadanie";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	List<UserEntity> users = Model.Users;
 }
 
-<h1>Edit</h1>
+<h1>
+	<a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id"><img class="icon" src="~/icons/arrow-left.svg" /></a>
+	@ViewData["Title"]
+</h1>
 
-<h4>TaskEntity</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Deadline" class="control-label"></label>
-                <input asp-for="Deadline" class="form-control" />
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Priority" class="control-label"></label>
-                <input asp-for="Priority" class="form-control" />
-                <span asp-validation-for="Priority" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+	<div class="col-md-4">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input asp-for="Name" class="form-control" autofocus />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Description" class="control-label"></label>
+				<input asp-for="Description" class="form-control" />
+				<span asp-validation-for="Description" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Deadline" class="control-label"></label>
+				<input asp-for="Deadline" class="form-control" />
+				<span asp-validation-for="Deadline" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Priority" class="control-label"></label>
+				<select class="form-select" asp-for="Priority" asp-items="Html.GetEnumSelectList<PriorityEnum>()"></select>
+				<span asp-validation-for="Priority" class="text-danger"></span>
+			</div>
+			<hr />
+			<select asp-for="UserId" class="form-select">
+				@if(users.Count == 0)
+				{
+					<option>Nie znaleziono żadnych pracowników</option>
+				}
+				@foreach(UserEntity user in users)
+				{
+					<option value="@user.Id">@user.FirstName @user.LastName</option>
+				}
+			</select>
+			<br />
+			<div class="form-group">
+				<input type="submit" value="Zapisz" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -15,7 +15,7 @@ namespace Sklepix.Models.Tasks
 		public string? Description { get; set; }
 		public List<UserEntity>? Users { get; set; }
 		[DisplayName("Pracownik")]
-		public string UserId { get; set; }
+		public string? UserId { get; set; }
 		[DisplayName("Termin")]
 		public DateTime Deadline { get; set; }
 		[DisplayName("Priorytet")]

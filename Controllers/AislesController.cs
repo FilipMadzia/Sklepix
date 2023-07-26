@@ -153,6 +153,7 @@ namespace Sklepix.Controllers
 				}
 				return RedirectToAction(nameof(Details), new { id = id });
 			}
+
 			return View(aisleVm);
 		}
 

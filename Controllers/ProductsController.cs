@@ -239,6 +239,7 @@ namespace Sklepix.Controllers
 			{
 				return Problem("Entity set 'SklepixContext.Product'  is null.");
 			}
+
 			ProductEntity productEntity = _productRepository.GetProductById(id);
 
 			if(productEntity != null)
