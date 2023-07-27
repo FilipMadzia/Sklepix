@@ -54,6 +54,7 @@ namespace Sklepix.Controllers
 					Deadline = i.Deadline,
 					Priority = i.Priority,
 					Status = i.Status,
+					IsFinishedSuccessfully = i.IsFinishedSuccessfully ? "Tak" : "Nie",
 					StyleClass = TaskStyleClass(i)
 				})
 				.ToList();

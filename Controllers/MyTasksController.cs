@@ -114,7 +114,7 @@ namespace Sklepix.Controllers
 					break;
 				case TaskEntity.StatusEnum.Doing:
 					taskEntity.FinishedTime = DateTime.Now;
-					taskEntity.IsFinishedSuccessfully = true;
+					taskEntity.IsFinishedSuccessfully = Request.Form["IsFinishedSuccessfully"].ToString() == "on";
 					taskEntity.Notes = taskVm.Notes;
 					taskEntity.Status = TaskEntity.StatusEnum.Finished;
 					break;

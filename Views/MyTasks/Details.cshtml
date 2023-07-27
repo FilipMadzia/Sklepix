@@ -47,13 +47,25 @@
 			<form asp-action="Details">
 				<input type="hidden" asp-for="Id" />
 				<label>@Html.DisplayFor(model => model.Status)</label>
-				@if(Model.Status != TaskEntity.StatusEnum.Finished)
+				<hr class="w-25" />
+				@switch(Model.Status)
 				{
-					@if(Model.Status == TaskEntity.StatusEnum.Doing)
-					{
-						<input asp-for="Notes" />
-					}
-					<input class="btn-primary" type="submit" value="Zmień status" />
+					case TaskEntity.StatusEnum.Todo:
+						<input class="form-control btn-primary w-25" type="submit" value="Zmień status na @TaskEntity.StatusEnum.Doing" />
+						break;
+					case TaskEntity.StatusEnum.Doing:
+						<label asp-for="Notes"></label>
+						<input class="form-control w-25" asp-for="Notes" /><br />
+
+						<div class="form-check w-25">
+							<input class="form-check-input" id="is-finished-successfully" type="checkbox" name="IsFinishedSuccessfully" checked />
+							<label class="form-check-label" for="is-finished-successfully" asp-for="IsFinishedSuccessfully"></label>
+						</div>
+						<hr class="w-25" />
+						<input class="form-control btn-primary w-25" type="submit" value="Zmień status na @TaskEntity.StatusEnum.Finished" />
+						break;
+					default:
+						break;
 				}
 			</form>
 		</dd>
