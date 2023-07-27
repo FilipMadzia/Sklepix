@@ -22,7 +22,7 @@ namespace Sklepix.Models.Tasks
 		public bool IsCompleted { get; set; }
 		[DisplayName("Data ukończenia")]
 		public DateTime FinishedTime { get; set; }
-		[DisplayName("Zakończono")]
+		[DisplayName("Zakończono sukcesem")]
 		public string? IsFinishedSuccessfully { get; set; }
 		[DisplayName("Dodatkowe informacje")]
 		public string? Notes { get; set; }

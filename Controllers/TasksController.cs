@@ -85,10 +85,10 @@ namespace Sklepix.Controllers
 				Status = taskEntity.Status
 			};
 
-			if(taskEntity.FinishedTime != DateTime.MinValue)
+			if(taskEntity.Status == TaskEntity.StatusEnum.Finished)
 			{
 				taskVm.FinishedTime = taskEntity.FinishedTime;
-				taskVm.IsFinishedSuccessfully = taskEntity.IsFinishedSuccessfully == true ? "sukcesem" : "porażką";
+				taskVm.IsFinishedSuccessfully = taskEntity.IsFinishedSuccessfully == true ? "Tak" : "Nie";
 				taskVm.Notes = taskEntity.Notes;
 				taskVm.IsCompleted = true;
 			}
