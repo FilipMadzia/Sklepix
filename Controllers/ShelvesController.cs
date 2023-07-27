@@ -67,7 +67,7 @@ namespace Sklepix.Controllers
 			{
 				Aisles = _aisleRepository.GetAisles()
 			};
-			
+
 			return View(shelfVm);
 		}
 
@@ -142,7 +142,7 @@ namespace Sklepix.Controllers
 					_shelfRepository.UpdateShelf(shelfEntity);
 					_shelfRepository.Save();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch(DbUpdateConcurrencyException)
 				{
 					if(_shelfRepository.GetShelfById(id) == null)
 					{
@@ -196,7 +196,7 @@ namespace Sklepix.Controllers
 			{
 				return RedirectToAction(nameof(Index));
 			}
-			
+
 			if(_productRepository.GetProducts().Find(x => x.Shelf.Id == shelfEntity.Id) == null)
 			{
 				_shelfRepository.DeleteShelf(id);

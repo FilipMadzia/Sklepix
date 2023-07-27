@@ -20,5 +20,7 @@ namespace Sklepix.Models.Tasks
 		public DateTime Deadline { get; set; }
 		[DisplayName("Priorytet")]
 		public PriorityEnum Priority { get; set; }
+		[DisplayName("Status")]
+		public StatusEnum Status { get; set; }
 	}
 }

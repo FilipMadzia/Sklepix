@@ -44,5 +44,26 @@
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Status)
 		</dd>
+		@if(Model.IsCompleted)
+		{
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.FinishedTime)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.FinishedTime)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.IsFinishedSuccessfully)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.IsFinishedSuccessfully)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Notes)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Notes)
+			</dd>
+		}
 	</dl>
 </div>

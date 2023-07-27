@@ -17,19 +17,31 @@
 			<th class="th-lg">
 				@Html.DisplayNameFor(model => model.User)
 			</th>
+			<th class="th-lg">
+				@Html.DisplayNameFor(model => model.Deadline)
+			</th>
+			<th class="th-lg">
+				@Html.DisplayNameFor(model => model.Status)
+			</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach(var item in Model)
 		{
-			<tr class="align-middle row-link" onclick="location.href='@Url.Action("Details", new { Id = item.Id })'">
+			<tr class="align-middle row-link @item.StyleClass" onclick="location.href='@Url.Action("Details", new { Id = item.Id })'">
 				<td>
 					@Html.DisplayFor(modelItem => item.Name)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.User.FirstName)
 					@Html.DisplayFor(modelItem => item.User.LastName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Deadline)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
 				</td>
 				<td class="text-right">
 					<a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Usuń</a>

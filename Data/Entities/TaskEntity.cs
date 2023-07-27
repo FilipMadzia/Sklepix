@@ -22,5 +22,8 @@
 		public DateTime Deadline { get; set; }
 		public PriorityEnum Priority { get; set; }
 		public StatusEnum Status { get; set; }
+		public DateTime FinishedTime { get; set; }
+		public bool IsFinishedSuccessfully { get; set; }
+		public string? Notes { get; set; }
 	}
 }

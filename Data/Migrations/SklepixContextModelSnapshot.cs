@@ -235,33 +235,6 @@ namespace Sklepix.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Sklepix.Data.Entities.FinishedTaskEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("FinishedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsFinishedSuccessfully")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("FinishedTaskEntity");
-                });
-
             modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -332,7 +305,16 @@ namespace Sklepix.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("FinishedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinishedSuccessfully")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Priority")
@@ -483,15 +465,6 @@ namespace Sklepix.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Sklepix.Data.Entities.FinishedTaskEntity", b =>
-                {
-                    b.HasOne("Sklepix.Data.Entities.TaskEntity", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId");
-
-                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("Sklepix.Data.Entities.ProductEntity", b =>

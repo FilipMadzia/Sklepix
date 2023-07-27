@@ -19,5 +19,13 @@ namespace Sklepix.Models.Tasks
 		public PriorityEnum Priority { get; set; }
 		[DisplayName("Status")]
 		public StatusEnum Status { get; set; }
+		public bool IsCompleted { get; set; }
+		[DisplayName("Data ukończenia")]
+		public DateTime FinishedTime { get; set; }
+		[DisplayName("Zakończono")]
+		public string? IsFinishedSuccessfully { get; set; }
+		[DisplayName("Dodatkowe informacje")]
+		public string? Notes { get; set; }
+		public string? StyleClass { get; set; }
 	}
 }

@@ -13,7 +13,6 @@ namespace Sklepix.Data
 		public DbSet<ShelfEntity>? ShelfEntity { get; set; }
 		public DbSet<UserEntity>? UserEntity { get; set; }
 		public DbSet<TaskEntity>? TaskEntity { get; set; }
-		public DbSet<FinishedTaskEntity>? FinishedTaskEntity { get; set; }
 
 		public SklepixContext(DbContextOptions<SklepixContext> options) : base(options)
 		{

@@ -20,9 +20,30 @@ namespace Sklepix.Controllers
 			_userManager = userManager;
 		}
 
+		string TaskStyleClass(TaskEntity taskEntity)
+		{
+			string styleClass = "";
+
+			if(taskEntity.Status == TaskEntity.StatusEnum.Finished)
+			{
+				styleClass = "link-secondary";
+			}
+			else if((taskEntity.Deadline - DateTime.Now).TotalDays < 2)
+			{
+				styleClass = "link-danger";
+			}
+			else if((taskEntity.Deadline - DateTime.Now).TotalDays < 5)
+			{
+				styleClass = "link-warning";
+			}
+
+			return styleClass;
+		}
+
 		public IActionResult Index()
 		{
-			List<TaskDetailsViewModel> taskVms= _taskRepository.GetTasks()
+			List<TaskDetailsViewModel> taskVms = _taskRepository.GetTasks()
+				.OrderBy(x => x.Status)
 				.Select(i => new TaskDetailsViewModel()
 				{
 					Id = i.Id,
@@ -31,7 +52,8 @@ namespace Sklepix.Controllers
 					User = i.User,
 					Deadline = i.Deadline,
 					Priority = i.Priority,
-					Status = i.Status
+					Status = i.Status,
+					StyleClass = TaskStyleClass(i)
 				})
 				.ToList();
 
@@ -63,6 +85,18 @@ namespace Sklepix.Controllers
 				Status = taskEntity.Status
 			};
 
+			if(taskEntity.FinishedTime != DateTime.MinValue)
+			{
+				taskVm.FinishedTime = taskEntity.FinishedTime;
+				taskVm.IsFinishedSuccessfully = taskEntity.IsFinishedSuccessfully == true ? "sukcesem" : "porażką";
+				taskVm.Notes = taskEntity.Notes;
+				taskVm.IsCompleted = true;
+			}
+			else
+			{
+				taskVm.IsCompleted = false;
+			}
+
 			return View(taskVm);
 		}
 
@@ -88,7 +122,10 @@ namespace Sklepix.Controllers
 				User = _userManager.FindByIdAsync(taskVm.UserId).Result,
 				Deadline = taskVm.Deadline,
 				Priority = taskVm.Priority,
-				Status = TaskEntity.StatusEnum.Todo
+				Status = TaskEntity.StatusEnum.Todo,
+				FinishedTime = DateTime.MinValue,
+				IsFinishedSuccessfully = false,
+				Notes = null
 			};
 
 			if(taskEntity.User == null)
@@ -130,7 +167,8 @@ namespace Sklepix.Controllers
 				Users = _userManager.Users.ToList(),
 				UserId = taskEntity.User.Id,
 				Deadline = taskEntity.Deadline,
-				Priority = taskEntity.Priority
+				Priority = taskEntity.Priority,
+				Status = taskEntity.Status
 			};
 
 			return View(taskVm);
@@ -147,7 +185,8 @@ namespace Sklepix.Controllers
 				Description = taskVm.Description,
 				Deadline = taskVm.Deadline,
 				User = _userManager.FindByIdAsync(taskVm.UserId).Result,
-				Priority = taskVm.Priority
+				Priority = taskVm.Priority,
+				Status = taskVm.Status
 			};
 
 			if(id != taskEntity.Id)
