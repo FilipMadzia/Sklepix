@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
-using Sklepix.Models;
+using Sklepix.Models.Shelves;
 using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	public class ShelvesController : Controller
+    public class ShelvesController : Controller
 	{
 		private readonly ShelfRepository _shelfRepository;
 		private readonly AisleRepository _aisleRepository;

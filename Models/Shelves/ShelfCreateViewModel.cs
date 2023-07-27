@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Sklepix.Data.Entities;
 
-namespace Sklepix.Models
+namespace Sklepix.Models.Shelves
 {
 	public class ShelfCreateViewModel
 	{

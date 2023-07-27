@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
-using Sklepix.Models;
+using Sklepix.Models.Categories;
 using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	public class CategoriesController : Controller
+    public class CategoriesController : Controller
 	{
 		private readonly CategoryRepository _categoryRepository;
 		private readonly ProductRepository _productRepository;

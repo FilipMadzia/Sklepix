@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Sklepix.Models
+namespace Sklepix.Models.Products
 {
 	public class ProductCreateViewModel
 	{

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Sklepix.Models
+namespace Sklepix.Models.Shelves
 {
 	public class ShelfDetailsViewModel
 	{

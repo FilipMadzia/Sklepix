@@ -1,7 +1,7 @@
 ﻿using Sklepix.Data.Entities;
 using System.ComponentModel;
 
-namespace Sklepix.Models
+namespace Sklepix.Models.Aisles
 {
 	public class AisleDetailsViewModel
 	{

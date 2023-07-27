@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data;
 using Sklepix.Data.Entities;
-using Sklepix.Models;
+using Sklepix.Models.Users;
 
 namespace Sklepix.Controllers
 {
-	[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
 	public class UsersController : Controller
 	{
 		SklepixContext _context;

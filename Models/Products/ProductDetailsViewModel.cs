@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Sklepix.Models
+namespace Sklepix.Models.Products
 {
 	public class ProductDetailsViewModel
 	{
@@ -9,10 +9,10 @@ namespace Sklepix.Models
 		public string? Name { get; set; }
 		[DisplayName("Ilość")]
 		public int Count { get; set; }
-        [DisplayName("Cena")]
-        public decimal Price { get; set; }
+		[DisplayName("Cena")]
+		public decimal Price { get; set; }
 		[DisplayName("Marża")]
-        public string? Margin { get; set; }
+		public string? Margin { get; set; }
 		[DisplayName("Wartość bez marży")]
 		public decimal TotalPrice { get; set; }
 		[DisplayName("Wartość z marżą")]

@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
-using Sklepix.Models;
+using Sklepix.Models.Aisles;
 using Sklepix.Repositories;
 
 namespace Sklepix.Controllers
 {
-	public class AislesController : Controller
+    public class AislesController : Controller
 	{
 		private readonly AisleRepository _aisleRepository;
 		private readonly ShelfRepository _shelfRepository;
