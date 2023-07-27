@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models.Tasks;
 using Sklepix.Repositories;
+using System.Xml.Linq;
 
 namespace Sklepix.Controllers
 {
@@ -178,16 +179,13 @@ namespace Sklepix.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Edit(int id, TaskCreateViewModel taskVm)
 		{
-			TaskEntity taskEntity = new TaskEntity()
-			{
-				Id = taskVm.Id,
-				Name = taskVm.Name,
-				Description = taskVm.Description,
-				Deadline = taskVm.Deadline,
-				User = _userManager.FindByIdAsync(taskVm.UserId).Result,
-				Priority = taskVm.Priority,
-				Status = taskVm.Status
-			};
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
+
+			taskEntity.Name = taskVm.Name;
+			taskEntity.Description = taskVm.Description;
+			taskEntity.Deadline = taskVm.Deadline;
+			taskEntity.User = _userManager.FindByIdAsync(taskVm.UserId).Result;
+			taskEntity.Priority = taskVm.Priority;
 
 			if(id != taskEntity.Id)
 			{

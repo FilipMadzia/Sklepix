@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sklepix.Data.Entities;
 using Sklepix.Models.Tasks;
 using Sklepix.Repositories;
@@ -58,6 +59,96 @@ namespace Sklepix.Controllers
 				.ToList();
 
 			return View(taskVms);
+		}
+
+		public IActionResult Details(int id = -1)
+		{
+			if(id == -1 || _taskRepository == null)
+			{
+				return NotFound();
+			}
+
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
+
+			if(taskEntity == null)
+			{
+				return NotFound();
+			}
+
+			TaskDetailsViewModel taskVm = new TaskDetailsViewModel()
+			{
+				Id = taskEntity.Id,
+				Name = taskEntity.Name,
+				Description = taskEntity.Description,
+				User = taskEntity.User,
+				Deadline = taskEntity.Deadline,
+				Priority = taskEntity.Priority,
+				Status = taskEntity.Status
+			};
+
+			if(taskEntity.Status == TaskEntity.StatusEnum.Finished)
+			{
+				taskVm.FinishedTime = taskEntity.FinishedTime;
+				taskVm.IsFinishedSuccessfully = taskEntity.IsFinishedSuccessfully == true ? "Tak" : "Nie";
+				taskVm.Notes = taskEntity.Notes;
+				taskVm.IsCompleted = true;
+			}
+			else
+			{
+				taskVm.IsCompleted = false;
+			}
+
+			return View(taskVm);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Details(int id, TaskDetailsViewModel taskVm)
+		{
+			TaskEntity taskEntity = _taskRepository.GetTaskById(id);
+
+			switch(taskEntity.Status)
+			{
+				case TaskEntity.StatusEnum.Todo:
+					taskEntity.Status = TaskEntity.StatusEnum.Doing;
+					break;
+				case TaskEntity.StatusEnum.Doing:
+					taskEntity.FinishedTime = DateTime.Now;
+					taskEntity.IsFinishedSuccessfully = true;
+					taskEntity.Notes = taskVm.Notes;
+					taskEntity.Status = TaskEntity.StatusEnum.Finished;
+					break;
+				default:
+					break;
+			}
+
+			if(id != taskEntity.Id)
+			{
+				return NotFound();
+			}
+
+			if(ModelState.IsValid)
+			{
+				try
+				{
+					_taskRepository.UpdateTask(taskEntity);
+					_taskRepository.Save();
+				}
+				catch(DbUpdateConcurrencyException)
+				{
+					if(_taskRepository.GetTaskById(id) == null)
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Details), new { id = id });
+			}
+
+			return View(taskVm);
 		}
 	}
 }

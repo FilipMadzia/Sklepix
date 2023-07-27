@@ -1,0 +1,82 @@
+﻿@using Sklepix.Data.Entities;
+@using Sklepix.Models.Tasks;
+@using static Sklepix.Data.Entities.TaskEntity;
+@model TaskDetailsViewModel
+
+@{
+	ViewData["Title"] = "Szczegóły mojego zadania";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>
+	<a class="btn btn-outline-secondary" asp-action="Index"><img class="icon" src="~/icons/arrow-left.svg" /></a>
+	@ViewData["Title"]
+</h1>
+
+<hr />
+<div>
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Name)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Description)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Description)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Deadline)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Deadline)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Priority)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Priority)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Status)
+		</dt>
+		<dd class="col-sm-10">
+			<form asp-action="Details">
+				<input type="hidden" asp-for="Id" />
+				<label>@Html.DisplayFor(model => model.Status)</label>
+				@if(Model.Status != TaskEntity.StatusEnum.Finished)
+				{
+					@if(Model.Status == TaskEntity.StatusEnum.Doing)
+					{
+						<input asp-for="Notes" />
+					}
+					<input class="btn-primary" type="submit" value="Zmień status" />
+				}
+			</form>
+		</dd>
+		@if(Model.IsCompleted)
+		{
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.FinishedTime)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.FinishedTime)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.IsFinishedSuccessfully)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.IsFinishedSuccessfully)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.Notes)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.Notes)
+			</dd>
+		}
+	</dl>
+</div>
