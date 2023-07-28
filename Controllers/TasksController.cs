@@ -35,7 +35,7 @@ namespace Sklepix.Controllers
 			}
 			else if((taskEntity.Deadline - DateTime.Now).TotalDays < 5)
 			{
-				styleClass = "link-warning";
+				styleClass = "link-warning-dark";
 			}
 
 			return styleClass;
@@ -187,6 +187,7 @@ namespace Sklepix.Controllers
 			taskEntity.Deadline = taskVm.Deadline;
 			taskEntity.User = _userManager.FindByIdAsync(taskVm.UserId).Result;
 			taskEntity.Priority = taskVm.Priority;
+			taskEntity.Status = taskVm.Status;
 
 			if(id != taskEntity.Id)
 			{

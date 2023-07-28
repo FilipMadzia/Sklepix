@@ -34,7 +34,7 @@ namespace Sklepix.Controllers
 			}
 			else if((taskEntity.Deadline - DateTime.Now).TotalDays < 5)
 			{
-				styleClass = "link-warning";
+				styleClass = "link-warning-dark";
 			}
 
 			return styleClass;

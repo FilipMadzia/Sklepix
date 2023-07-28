@@ -48,3 +48,7 @@ body {
 .disabled {
 	cursor: not-allowed;
 }
+
+.link-warning-dark {
+	color: darkorange;
+}
